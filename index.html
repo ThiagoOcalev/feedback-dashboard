@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Woca Feedback Analyzer - IA Híbrida</title>
+    <title>Woca Feedback Analyzer - IA Híbrida Otimizada</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script type="module">
         // Carrega Hugging Face Transformers
@@ -38,7 +38,7 @@
                 
             } catch (error) {
                 console.error('❌ Erro ao carregar IA:', error);
-                document.getElementById('aiStatusText').textContent = 'IA não disponível. Usando análise tradicional.';
+                document.getElementById('aiStatusText').textContent = 'IA não disponível. Usando análise avançada.';
                 document.getElementById('aiStatus').classList.add('ai-error');
                 
                 // Habilita interface mesmo sem IA
@@ -281,6 +281,13 @@
             border-radius: 4px;
             width: 0%;
             transition: width 0.3s ease;
+        }
+        
+        .batch-info {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+            font-style: italic;
         }
         
         /* Error */
@@ -686,27 +693,27 @@
         
         <!-- Upload Section -->
         <div id="uploadSection" class="upload-section">
-            <div class="upload-title">🧠 Woca Feedback Analyzer - IA Híbrida</div>
+            <div class="upload-title">🧠 Woca Feedback Analyzer - IA Otimizada</div>
             <div class="upload-subtitle">
-                Análise avançada com inteligência artificial contextual + algoritmos especializados.
+                Análise avançada com processamento não-bloqueante e precisão contextual aprimorada.
                 <br><strong>Formato esperado:</strong> CSV com coluna "Resposta" contendo os comentários dos usuários.
             </div>
             
             <div class="ai-notice">
-                <h3>🚀 Nova Versão com IA Contextual:</h3>
+                <h3>⚡ Versão Otimizada - Problemas Resolvidos:</h3>
                 <ul>
-                    <li><strong>Análise Híbrida:</strong> Combina algoritmos especializados + IA para máxima precisão</li>
-                    <li><strong>Compreensão Contextual:</strong> Entende "resolve problema" vs "tenho problema"</li>
-                    <li><strong>Detecção Sintática:</strong> Reconhece padrões como "disponibilizar", "gostaria que"</li>
-                    <li><strong>Validação Cruzada:</strong> IA confirma classificações duvidosas</li>
-                    <li><strong>100% Gratuito:</strong> Processamento local, sem custos ou APIs externas</li>
+                    <li><strong>Performance Aprimorada:</strong> Processamento em lotes que não trava o navegador</li>
+                    <li><strong>Análise Temporal:</strong> Distingue "me ajudou" (passado) vs "disponibilizar" (futuro)</li>
+                    <li><strong>Padrões de Gratidão:</strong> Detecta "o woca me ajudou", "consegui fazer", "resolveu"</li>
+                    <li><strong>Prioridade Contextual:</strong> Contexto emocional ANTES de palavras técnicas</li>
+                    <li><strong>Progresso Real:</strong> Acompanhe cada etapa em tempo real</li>
                 </ul>
             </div>
             
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
                 <div class="upload-icon">📁</div>
                 <div class="upload-text">Aguardando carregamento da IA...</div>
-                <div class="upload-hint">A análise inteligente será ativada em instantes</div>
+                <div class="upload-hint">A análise otimizada será ativada em instantes</div>
             </div>
             
             <input type="file" id="fileInput" accept=".csv" />
@@ -716,11 +723,12 @@
             
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <div class="loading-text" id="loadingTitle">Analisando feedback com IA híbrida...</div>
+                <div class="loading-text" id="loadingTitle">Analisando feedback com IA otimizada...</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <div class="loading-details" id="loadingDetails">Preparando análise...</div>
+                <div class="batch-info" id="batchInfo"></div>
             </div>
             
             <div id="error" class="error">
@@ -733,10 +741,10 @@
         <div id="dashboard" class="dashboard">
             <!-- Header -->
             <div class="header">
-                <h1 id="dashboardTitle">🧠 Análise IA Híbrida - Woca Feedback</h1>
-                <p id="dashboardSubtitle">Análise completa com inteligência artificial contextual</p>
+                <h1 id="dashboardTitle">🧠 Análise IA Otimizada - Woca Feedback</h1>
+                <p id="dashboardSubtitle">Análise contextual com processamento não-bloqueante</p>
                 <div class="ai-badge" id="aiBadge">
-                    🤖 <strong>IA ATIVA:</strong> Análise contextual + algoritmos especializados
+                    🤖 <strong>IA OTIMIZADA:</strong> Análise temporal + padrões de gratidão
                 </div>
                 <button class="new-analysis-btn" onclick="resetApplication()">
                     🔄 Nova Análise
@@ -755,7 +763,7 @@
             
             <!-- Detailed Tables -->
             <div class="detailed-section">
-                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados com Análise IA</h2>
+                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados com IA Otimizada</h2>
                 
                 <div class="tab-navigation" id="tabNavigation">
                     <!-- Will be populated by JavaScript -->
@@ -773,6 +781,7 @@
         let processedData = null;
         let currentActiveTab = 'satisfeitos';
         let aiAnalysisEnabled = false;
+        let analysisWorker = null;
         
         // Initialize application
         document.addEventListener('DOMContentLoaded', function() {
@@ -799,7 +808,7 @@
             uploadArea.style.opacity = '1';
             uploadArea.style.pointerEvents = 'auto';
             uploadArea.querySelector('.upload-text').textContent = 'Clique aqui ou arraste seu arquivo CSV';
-            uploadArea.querySelector('.upload-hint').textContent = 'Arquivo será analisado com IA contextual';
+            uploadArea.querySelector('.upload-hint').textContent = 'Análise otimizada com processamento não-bloqueante';
             
             btnUpload.disabled = false;
             btnUpload.textContent = 'Escolher Arquivo CSV';
@@ -808,9 +817,8 @@
             console.log('🎯 Interface habilitada. IA:', aiAnalysisEnabled ? 'ATIVA' : 'FALLBACK');
         }
         
-        // Chama quando IA carregar (do script module)
+        // Chama quando IA carregar
         window.addEventListener('load', () => {
-            // Espera um pouco para IA carregar
             setTimeout(() => {
                 enableUploadInterface();
             }, 1000);
@@ -870,9 +878,10 @@
             });
         }
         
-        function updateProgress(percent, message) {
+        function updateProgress(percent, message, batchInfo = '') {
             document.getElementById('progressFill').style.width = percent + '%';
             document.getElementById('loadingDetails').textContent = message;
+            document.getElementById('batchInfo').textContent = batchInfo;
         }
         
         async function analyzeData(data) {
@@ -905,10 +914,10 @@
                 return;
             }
             
-            updateProgress(60, `Analisando ${validResponses.length} respostas com IA híbrida...`);
+            updateProgress(60, `Analisando ${validResponses.length} respostas com IA otimizada...`);
             
-            // Categorize responses with AI + algorithm hybrid
-            const categorizedData = await categorizeResponsesHybrid(validResponses);
+            // Categorize responses with optimized processing
+            const categorizedData = await categorizeResponsesOptimized(validResponses);
             
             updateProgress(90, 'Gerando relatório...');
             
@@ -926,7 +935,7 @@
             }, 1000);
         }
         
-        async function categorizeResponsesHybrid(responses) {
+        async function categorizeResponsesOptimized(responses) {
             const categories = {
                 satisfeitos: [],
                 problemas: [],
@@ -935,27 +944,42 @@
             };
             
             const total = responses.length;
+            const batchSize = 8; // Processar 8 por vez para não travar
             
-            for (let i = 0; i < responses.length; i++) {
-                const row = responses[i];
+            for (let i = 0; i < responses.length; i += batchSize) {
+                const batch = responses.slice(i, i + batchSize);
+                const batchNum = Math.floor(i / batchSize) + 1;
+                const totalBatches = Math.ceil(responses.length / batchSize);
                 
                 // Update progress
-                if (i % 10 === 0) {
-                    const percent = 60 + Math.floor((i / total) * 25);
-                    updateProgress(percent, `Analisando resposta ${i + 1} de ${total}...`);
+                const percent = 60 + Math.floor((i / total) * 25);
+                updateProgress(
+                    percent, 
+                    `Processando lote ${batchNum} de ${totalBatches}...`,
+                    `Analisando respostas ${i + 1}-${Math.min(i + batchSize, total)} de ${total}`
+                );
+                
+                // Process batch
+                for (let j = 0; j < batch.length; j++) {
+                    const row = batch[j];
+                    
+                    // Análise otimizada: algoritmo aprimorado + IA quando necessário
+                    const result = await categorizeResponseOptimized(row.Resposta);
+                    const categoryKey = getCategoryKey(result.category);
+                    
+                    categories[categoryKey].push({
+                        id: categories[categoryKey].length + 1,
+                        resposta: row.Resposta,
+                        confianca: result.confidence,
+                        motivo: result.reason,
+                        metodo: result.method
+                    });
                 }
                 
-                // Análise híbrida: algoritmo + IA
-                const result = await categorizeResponseHybrid(row.Resposta);
-                const categoryKey = getCategoryKey(result.category);
-                
-                categories[categoryKey].push({
-                    id: categories[categoryKey].length + 1,
-                    resposta: row.Resposta,
-                    confianca: result.confidence,
-                    motivo: result.reason,
-                    metodo: result.method
-                });
+                // Pause para não travar navegador
+                if (i + batchSize < responses.length) {
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
             }
             
             return {
@@ -971,11 +995,11 @@
             };
         }
         
-        async function categorizeResponseHybrid(resposta) {
+        async function categorizeResponseOptimized(resposta) {
             const texto = resposta.toLowerCase().trim();
             
-            // ETAPA 1: Análise com algoritmo especializado
-            const algorithmResult = categorizeResponseAdvanced(texto);
+            // ETAPA 1: Análise aprimorada com foco em contexto temporal
+            const algorithmResult = categorizeResponseAdvancedV2(texto, resposta);
             
             // ETAPA 2: Se IA disponível E confiança baixa, validar com IA
             if (aiAnalysisEnabled && window.sentimentPipeline && algorithmResult.confidence < 0.8) {
@@ -994,68 +1018,16 @@
                 }
             }
             
-            // ETAPA 3: Se confiança alta ou IA indisponível, usar só algoritmo
+            // ETAPA 3: Se confiança alta, usar algoritmo
             return {
                 ...algorithmResult,
-                method: aiAnalysisEnabled ? 'Algoritmo (alta confiança)' : 'Algoritmo (IA indisponível)'
+                method: aiAnalysisEnabled ? 'Algoritmo Otimizado' : 'Algoritmo (IA indisponível)'
             };
         }
         
-        function combineAlgorithmAndAI(algorithmResult, aiSentiment, originalText) {
-            // Mapeamento IA: POSITIVE->Satisfeito, NEGATIVE->Problema, NEUTRAL->Sugestão
-            let aiCategory = 'Não Classificado';
-            let aiConfidence = aiSentiment.score;
-            
-            if (aiSentiment.label === 'POSITIVE' && aiConfidence > 0.7) {
-                aiCategory = 'Clientes Satisfeitos';
-            } else if (aiSentiment.label === 'NEGATIVE' && aiConfidence > 0.7) {
-                // Só considera problema se não tem padrões de sugestão
-                if (!hasStrongSuggestionPatterns(originalText.toLowerCase())) {
-                    aiCategory = 'Problemas Técnicos';
-                }
-            }
-            
-            // Lógica de combinação
-            if (algorithmResult.confidence >= 0.7) {
-                // Algoritmo tem alta confiança - manter
-                return {
-                    category: algorithmResult.category,
-                    confidence: Math.min(0.95, algorithmResult.confidence + 0.1),
-                    reason: `${algorithmResult.reason} + IA confirma (${aiSentiment.label})`,
-                    method: 'Híbrido (algoritmo prioritário)'
-                };
-            } else if (aiCategory !== 'Não Classificado') {
-                // IA tem confiança e algoritmo tem baixa confiança
-                return {
-                    category: aiCategory,
-                    confidence: Math.min(0.85, aiConfidence),
-                    reason: `IA detectou ${aiSentiment.label} (score: ${aiConfidence.toFixed(2)})`,
-                    method: 'Híbrido (IA prioritária)'
-                };
-            } else {
-                // Ambos com baixa confiança - manter algoritmo
-                return {
-                    category: algorithmResult.category,
-                    confidence: algorithmResult.confidence * 0.8, // Reduz confiança
-                    reason: `${algorithmResult.reason} + IA inconclusiva`,
-                    method: 'Híbrido (inconclusivo)'
-                };
-            }
-        }
-        
-        function hasStrongSuggestionPatterns(texto) {
-            const strongSuggestionPatterns = [
-                /^(disponibilizar|implementar|adicionar|criar|desenvolver|incluir)/i,
-                /(seria bom|seria interessante|gostaria|poderia ter)/i,
-                /(sugerir|sugiro|sugestão|melhorar)/i
-            ];
-            
-            return strongSuggestionPatterns.some(pattern => pattern.test(texto));
-        }
-        
-        function categorizeResponseAdvanced(texto) {
-            // Análise de satisfação
-            const satisfactionAnalysis = analyzeSatisfaction(texto);
+        function categorizeResponseAdvancedV2(texto, originalText) {
+            // PRIORIDADE 1: Análise de SATISFAÇÃO/GRATIDÃO (com contexto temporal)
+            const satisfactionAnalysis = analyzeSatisfactionV2(texto, originalText);
             if (satisfactionAnalysis.isPositive) {
                 return {
                     category: 'Clientes Satisfeitos',
@@ -1064,8 +1036,8 @@
                 };
             }
             
-            // Análise de sugestões (PRIORIDADE ALTA)
-            const suggestionAnalysis = analyzeSuggestions(texto);
+            // PRIORIDADE 2: Análise de SUGESTÕES (padrões sintáticos fortes)
+            const suggestionAnalysis = analyzeSuggestionsV2(texto, originalText);
             if (suggestionAnalysis.isSuggestion) {
                 return {
                     category: 'Sugestões de Funcionalidades',
@@ -1074,8 +1046,8 @@
                 };
             }
             
-            // Análise de problemas
-            const problemAnalysis = analyzeProblems(texto);
+            // PRIORIDADE 3: Análise de PROBLEMAS
+            const problemAnalysis = analyzeProblemsV2(texto);
             if (problemAnalysis.isProblem && !problemAnalysis.isResolved) {
                 return {
                     category: 'Problemas Técnicos',
@@ -1091,61 +1063,79 @@
             };
         }
         
-        function analyzeSatisfaction(texto) {
-            // Palavras claramente positivas
-            const strongPositive = ['excelente', 'ótimo', 'perfeito', 'maravilhoso', 'fantástico', 'incrível', 'adorei', 'parabéns'];
-            const mediumPositive = ['muito bom', 'muito útil', 'muito prático', 'muito fácil', 'muito legal'];
-            const weakPositive = ['bom', 'legal', 'bacana', 'útil', 'prático', 'gostei', 'top', 'show'];
-            
-            // Contextos que indicam satisfação 
-            const problemSolvingPatterns = [
-                'resolve problema', 'resolveu problema', 'acabou com problema', 'elimina problema',
-                'resolve questão', 'resolveu questão', 'acabou com questão', 'elimina questão',
-                'resolve dificuldade', 'resolveu dificuldade', 'acabou com dificuldade', 'elimina dificuldade',
-                'facilita', 'simplifica', 'agiliza', 'economiza tempo', 'poupa tempo', 'está facilitando'
+        function analyzeSatisfactionV2(texto, originalText) {
+            // PADRÕES MUITO FORTES de satisfação/gratidão
+            const strongGratitudePatterns = [
+                // Padrões de ajuda passada
+                /o woca (me |)ajudou/,
+                /woca (me |)ajudou/,
+                /(me |)ajudou com/,
+                /(me |)ajudou a/,
+                
+                // Padrões de sucesso passado
+                /consegui (fazer|usar|criar)/,
+                /consegui com o woca/,
+                /deu certo/,
+                /funcionou/,
+                
+                // Padrões de resolução
+                /resolveu (meu|o) problema/,
+                /resolveu (minha|a) questão/,
+                /eliminou (meu|o) problema/,
+                /acabou com (meu|o) problema/,
+                
+                // Padrões de facilidade atual
+                /está facilitando/,
+                /facilita muito/,
+                /simplifica o trabalho/,
+                /agiliza o processo/
             ];
             
-            // Verificar padrões de resolução de problemas
-            for (let pattern of problemSolvingPatterns) {
-                if (texto.includes(pattern)) {
+            // Verificar padrões de gratidão/ajuda
+            for (let pattern of strongGratitudePatterns) {
+                if (pattern.test(texto)) {
                     return {
                         isPositive: true,
-                        confidence: 0.9,
-                        reason: `Padrão de resolução: "${pattern}"`
+                        confidence: 0.95,
+                        reason: `Padrão de gratidão/ajuda: "${pattern.source}"`
                     };
                 }
             }
             
-            // Verificar palavras fortemente positivas
+            // Elogios diretos (alta confiança)
+            const strongPositive = ['excelente', 'ótimo', 'perfeito', 'maravilhoso', 'fantástico', 'incrível', 'adorei', 'parabéns'];
             for (let word of strongPositive) {
                 if (texto.includes(word)) {
                     return {
                         isPositive: true,
                         confidence: 0.95,
-                        reason: `Palavra fortemente positiva: "${word}"`
+                        reason: `Elogio direto: "${word}"`
                     };
                 }
             }
             
-            // Verificar frases positivas médias
+            // Elogios médios
+            const mediumPositive = ['muito bom', 'muito útil', 'muito prático', 'muito fácil', 'muito legal', 'muito eficiente'];
             for (let phrase of mediumPositive) {
                 if (texto.includes(phrase)) {
                     return {
                         isPositive: true,
                         confidence: 0.85,
-                        reason: `Frase positiva: "${phrase}"`
+                        reason: `Elogio qualificado: "${phrase}"`
                     };
                 }
             }
             
-            // Verificar palavras fracamente positivas (com cuidado)
+            // Palavras positivas simples (baixa confiança - pode ser contexto de sugestão)
+            const weakPositive = ['bom', 'legal', 'bacana', 'útil', 'prático', 'gostei'];
             for (let word of weakPositive) {
-                if (texto === word || texto.includes(' ' + word + ' ') || texto.startsWith(word + ' ') || texto.endsWith(' ' + word)) {
-                    if (!hasNegationNear(texto, word)) {
+                if (texto === word || (texto.includes(' ' + word + ' ') || texto.startsWith(word + ' ') || texto.endsWith(' ' + word))) {
+                    // Verificar se não é contexto de sugestão
+                    if (!hasNegationNear(texto, word) && !hasRealSuggestionContext(originalText)) {
                         return {
                             isPositive: true,
-                            confidence: 0.7,
-                            reason: `Palavra positiva: "${word}"`
+                            confidence: 0.6, // Baixa confiança
+                            reason: `Palavra positiva simples: "${word}"`
                         };
                     }
                 }
@@ -1154,36 +1144,35 @@
             return { isPositive: false, confidence: 0, reason: '' };
         }
         
-        function analyzeSuggestions(texto) {
-            // Padrões MUITO FORTES de sugestão (prioridade máxima)
-            const strongSuggestionStarters = [
+        function analyzeSuggestionsV2(texto, originalText) {
+            // PADRÕES MUITO FORTES de sugestão (máxima prioridade)
+            const strongSuggestionPatterns = [
+                // Verbos de ação futura
                 /^(disponibilizar|implementar|adicionar|criar|desenvolver|incluir|inserir|colocar)/,
-                /(seria bom|seria interessante|seria legal|seria útil)/,
-                /(gostaria que|gostaria de|queria que)/,
-                /(poderia ter|poderia incluir|poderia adicionar)/,
-                /(sugiro|sugerir|sugestão)/
+                
+                // Expressões condicionais
+                /(seria bom|seria interessante|seria legal|seria útil|seria ótimo)/,
+                /(gostaria que|gostaria de|queria que|queria poder)/,
+                /(poderia ter|poderia incluir|poderia adicionar|poderia implementar)/,
+                
+                // Sugestões diretas
+                /(sugiro|sugerir|sugestão|recomendo|recomendaria)/,
+                /(melhorar|aprimorar|otimizar) (o|a) woca/
             ];
             
             // Verificar padrões muito fortes
-            for (let pattern of strongSuggestionStarters) {
+            for (let pattern of strongSuggestionPatterns) {
                 if (pattern.test(texto)) {
                     return {
                         isSuggestion: true,
                         confidence: 0.95,
-                        reason: `Padrão forte de sugestão detectado`
+                        reason: `Padrão forte de sugestão: "${pattern.source}"`
                     };
                 }
             }
             
-            // Padrões médios
-            const mediumSuggestionWords = ['melhorar', 'aprimorar', 'otimizar', 'aumentar'];
-            const technicalFeatures = [
-                'dimensionamento', 'cálculo', 'calcular', 'dimensionar', 'conduto', 'cabo', 'fiação',
-                'quadro', 'disjuntor', 'dr', 'dps', 'circuito', 'trifásico', 'monofásico',
-                'autocad', 'dwg', 'dxf', 'cad', 'mobile', 'celular', 'app', 'aplicativo',
-                'orçamento', 'relatório', 'pdf', 'impressão', 'norma', 'nbr'
-            ];
-            
+            // Padrões médios de melhoria
+            const mediumSuggestionWords = ['melhorar', 'aprimorar', 'otimizar', 'aumentar', 'expandir'];
             for (let word of mediumSuggestionWords) {
                 if (texto.includes(word)) {
                     return {
@@ -1194,21 +1183,30 @@
                 }
             }
             
-            // Características técnicas podem indicar sugestão
-            for (let feature of technicalFeatures) {
-                if (texto.includes(feature)) {
-                    return {
-                        isSuggestion: true,
-                        confidence: 0.6,
-                        reason: `Possível sugestão técnica: "${feature}"`
-                    };
+            // Características técnicas (SOMENTE se não há contexto de satisfação)
+            if (!hasGratitudeContext(originalText)) {
+                const technicalFeatures = [
+                    'dimensionamento', 'cálculo', 'calcular', 'dimensionar', 'conduto', 'cabo', 'fiação',
+                    'quadro', 'disjuntor', 'dr', 'dps', 'circuito', 'trifásico', 'monofásico',
+                    'autocad', 'dwg', 'dxf', 'cad', 'mobile', 'celular', 'app', 'aplicativo',
+                    'orçamento', 'relatório', 'pdf', 'impressão', 'norma', 'nbr'
+                ];
+                
+                for (let feature of technicalFeatures) {
+                    if (texto.includes(feature)) {
+                        return {
+                            isSuggestion: true,
+                            confidence: 0.6,
+                            reason: `Possível sugestão técnica: "${feature}"`
+                        };
+                    }
                 }
             }
             
             return { isSuggestion: false, confidence: 0, reason: '' };
         }
         
-        function analyzeProblems(texto) {
+        function analyzeProblemsV2(texto) {
             const problemWords = ['erro', 'bug', 'falha', 'problema', 'dificuldade', 'não funciona', 'não carrega', 'trava', 'travando', 'lento', 'demora'];
             const resolutionWords = ['resolve', 'resolveu', 'soluciona', 'solucionou', 'elimina', 'eliminou', 'acabou com', 'corrige', 'corrigiu'];
             
@@ -1253,6 +1251,26 @@
             };
         }
         
+        function hasGratitudeContext(originalText) {
+            const gratitudePatterns = [
+                'me ajudou', 'ajudou com', 'consegui', 'deu certo', 'funcionou',
+                'resolveu', 'eliminou', 'facilitou', 'simplificou'
+            ];
+            
+            const lowerText = originalText.toLowerCase();
+            return gratitudePatterns.some(pattern => lowerText.includes(pattern));
+        }
+        
+        function hasRealSuggestionContext(originalText) {
+            const suggestionIndicators = [
+                'disponibilizar', 'implementar', 'adicionar', 'criar',
+                'seria bom', 'gostaria', 'poderia', 'sugiro'
+            ];
+            
+            const lowerText = originalText.toLowerCase();
+            return suggestionIndicators.some(indicator => lowerText.includes(indicator));
+        }
+        
         function hasNegationNear(texto, word) {
             const negations = ['não', 'nunca', 'sem', 'zero'];
             const wordIndex = texto.indexOf(word);
@@ -1268,6 +1286,44 @@
             }
             
             return false;
+        }
+        
+        function combineAlgorithmAndAI(algorithmResult, aiSentiment, originalText) {
+            // Mapeamento IA
+            let aiCategory = 'Não Classificado';
+            let aiConfidence = aiSentiment.score;
+            
+            if (aiSentiment.label === 'POSITIVE' && aiConfidence > 0.7) {
+                aiCategory = 'Clientes Satisfeitos';
+            } else if (aiSentiment.label === 'NEGATIVE' && aiConfidence > 0.7) {
+                if (!hasRealSuggestionContext(originalText)) {
+                    aiCategory = 'Problemas Técnicos';
+                }
+            }
+            
+            // Lógica de combinação
+            if (algorithmResult.confidence >= 0.7) {
+                return {
+                    category: algorithmResult.category,
+                    confidence: Math.min(0.95, algorithmResult.confidence + 0.1),
+                    reason: `${algorithmResult.reason} + IA confirma (${aiSentiment.label})`,
+                    method: 'Híbrido (algoritmo otimizado)'
+                };
+            } else if (aiCategory !== 'Não Classificado') {
+                return {
+                    category: aiCategory,
+                    confidence: Math.min(0.85, aiConfidence),
+                    reason: `IA detectou ${aiSentiment.label} (score: ${aiConfidence.toFixed(2)})`,
+                    method: 'Híbrido (IA prioritária)'
+                };
+            } else {
+                return {
+                    category: algorithmResult.category,
+                    confidence: algorithmResult.confidence * 0.8,
+                    reason: `${algorithmResult.reason} + IA inconclusiva`,
+                    method: 'Híbrido (inconclusivo)'
+                };
+            }
         }
         
         function getCategoryKey(category) {
@@ -1292,20 +1348,21 @@
         function getMethodBadge(method) {
             if (method.includes('Híbrido')) {
                 return '<span class="ai-badge-small">IA</span>';
-            } else if (method.includes('Algoritmo')) {
+            } else if (method.includes('Otimizado')) {
+                return '<span class="ai-badge-small" style="background: #64eeb8; color: #000;">OPT</span>';
+            } else {
                 return '<span class="ai-badge-small" style="background: #666;">ALG</span>';
             }
-            return '';
         }
         
         function generateDashboard(data) {
             // Atualizar badge IA
             const aiBadge = document.getElementById('aiBadge');
             if (data.aiEnabled) {
-                aiBadge.innerHTML = '🤖 <strong>IA ATIVA:</strong> Análise híbrida (algoritmo + IA contextual)';
+                aiBadge.innerHTML = '🤖 <strong>IA OTIMIZADA:</strong> Análise temporal + padrões de gratidão + processamento não-bloqueante';
             } else {
-                aiBadge.innerHTML = '⚠️ <strong>IA INDISPONÍVEL:</strong> Usando algoritmos avançados';
-                aiBadge.style.background = 'rgba(255,255,255,0.1)';
+                aiBadge.innerHTML = '⚡ <strong>ALGORITMO OTIMIZADO:</strong> Análise temporal + padrões de gratidão';
+                aiBadge.style.background = 'rgba(100, 238, 184, 0.2)';
             }
             
             generateSummary(data);
@@ -1318,7 +1375,7 @@
             const dist = data.distribution;
             
             document.getElementById('dashboardSubtitle').textContent = 
-                `Análise híbrida de ${total} respostas com ${data.aiEnabled ? 'IA ativa' : 'algoritmos avançados'}`;
+                `Análise otimizada de ${total} respostas com ${data.aiEnabled ? 'IA híbrida' : 'algoritmos avançados'}`;
             
             const summaryHTML = `
                 <div class="summary-card satisfeitos">
@@ -1375,7 +1432,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💬 Exemplos (detectados por IA híbrida):</div>
+                        <div class="examples-title">💬 Exemplos (análise temporal ativa):</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.satisfeitos).map(ex => `<li>${ex.resposta}</li>`).join('')}
                         </ul>
@@ -1402,7 +1459,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">⚠️ Principais Problemas Reais:</div>
+                        <div class="examples-title">⚠️ Problemas Reais Detectados:</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.problemas).slice(0, 5).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
@@ -1429,7 +1486,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💡 Principais Sugestões Identificadas:</div>
+                        <div class="examples-title">💡 Sugestões Sintáticas Identificadas:</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.sugestoes).slice(0, 8).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
@@ -1447,6 +1504,9 @@
                 const texto = item.resposta.toLowerCase();
                 
                 if (category === 'satisfeitos') {
+                    if (texto.includes('ajudou') || texto.includes('me ajudou') || texto.includes('consegui')) {
+                        themes['Ajuda Concreta'] = (themes['Ajuda Concreta'] || 0) + 1;
+                    }
                     if (texto.includes('resolve') || texto.includes('resolveu') || texto.includes('elimina') || texto.includes('acabou')) {
                         themes['Resolução de Problemas'] = (themes['Resolução de Problemas'] || 0) + 1;
                     }
@@ -1458,9 +1518,6 @@
                     }
                     if (texto.includes('muito bom') || texto.includes('excelente') || texto.includes('ótimo') || texto.includes('parabéns')) {
                         themes['Elogios Diretos'] = (themes['Elogios Diretos'] || 0) + 1;
-                    }
-                    if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular')) {
-                        themes['Elogios ao Dimensionamento'] = (themes['Elogios ao Dimensionamento'] || 0) + 1;
                     }
                 } else if (category === 'problemas') {
                     if (texto.includes('lento') || texto.includes('demora') || texto.includes('trava')) {
@@ -1479,6 +1536,9 @@
                         themes['Dificuldade de Uso'] = (themes['Dificuldade de Uso'] || 0) + 1;
                     }
                 } else if (category === 'sugestoes') {
+                    if (texto.includes('disponibilizar') || texto.includes('implementar') || texto.includes('adicionar')) {
+                        themes['Solicitações Diretas'] = (themes['Solicitações Diretas'] || 0) + 1;
+                    }
                     if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular') || texto.includes('condutor')) {
                         themes['Dimensionamento/Cálculos'] = (themes['Dimensionamento/Cálculos'] || 0) + 1;
                     }
@@ -1544,7 +1604,7 @@
                 <div id="${categoryKey}-detail" class="detail-tab-content ${isActive}" ${style}>
                     <div style="background: linear-gradient(135deg, ${headerColor}20, ${headerColor}10); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
                         <h3 style="color: ${headerColor}; margin: 0 0 10px 0;">${categoryName} - ${items.length} respostas</h3>
-                        <p style="margin: 0; color: #555;">Respostas analisadas com IA híbrida (algoritmo + inteligência artificial contextual).</p>
+                        <p style="margin: 0; color: #555;">Respostas analisadas com algoritmo otimizado (análise temporal + padrões de gratidão).</p>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
@@ -1578,7 +1638,7 @@
                             </tbody>
                         </table>
                         <div class="result-counter">
-                            Mostrando ${items.length} de ${items.length} respostas analisadas com IA híbrida
+                            Mostrando ${items.length} de ${items.length} respostas analisadas com algoritmo otimizado
                         </div>
                     </div>
                 </div>
@@ -1644,7 +1704,7 @@
             
             // Update counter
             const counter = table.parentElement.querySelector('.result-counter');
-            counter.textContent = `Mostrando ${visibleCount} de ${rows.length} respostas analisadas com IA híbrida`;
+            counter.textContent = `Mostrando ${visibleCount} de ${rows.length} respostas analisadas com algoritmo otimizado`;
         }
         
         function showLoading() {
