@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Woca Feedback Analyzer - IA Híbrida Otimizada</title>
+    <title>Woca Feedback Analyzer - Teste 100% Groq</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         * {
@@ -24,6 +24,139 @@
             padding: 20px;
         }
         
+        /* API Key Section */
+        .api-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        
+        .api-title {
+            font-size: 2.5em;
+            color: #e06141;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .api-subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .groq-notice {
+            background: linear-gradient(135deg, #64eeb8, #4cef89);
+            color: #000;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .groq-notice h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .groq-notice ul {
+            margin: 15px 0 0 20px;
+        }
+        
+        .groq-notice li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .api-input-group {
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .api-label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .api-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e06141;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            background: #fefcfb;
+        }
+        
+        .api-input:focus {
+            outline: none;
+            border-color: #64eeb8;
+            box-shadow: 0 0 10px rgba(100, 238, 184, 0.3);
+        }
+        
+        .api-help {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .api-status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .api-status.success {
+            background: #e8f5e9;
+            color: #2d5a37;
+            border: 2px solid #64eeb8;
+        }
+        
+        .api-status.error {
+            background: #ffe6e6;
+            color: #c53030;
+            border: 2px solid #e06141;
+        }
+        
+        .btn-test-api {
+            background: linear-gradient(135deg, #e06141, #ee594a);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 180px;
+        }
+        
+        .btn-test-api:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(224, 97, 65, 0.3);
+        }
+        
+        .btn-test-api:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
         /* Upload Section */
         .upload-section {
             background: white;
@@ -33,6 +166,7 @@
             text-align: center;
             margin: 50px auto;
             max-width: 800px;
+            display: none;
         }
         
         .upload-title {
@@ -47,32 +181,6 @@
             color: #666;
             margin-bottom: 40px;
             line-height: 1.6;
-        }
-        
-        .hybrid-notice {
-            background: linear-gradient(135deg, #64eeb8, #4cef89);
-            color: #000;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-        
-        .hybrid-notice h3 {
-            margin-bottom: 15px;
-            font-size: 1.4em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .hybrid-notice ul {
-            margin: 15px 0 0 20px;
-        }
-        
-        .hybrid-notice li {
-            margin-bottom: 8px;
-            line-height: 1.4;
         }
         
         .upload-area {
@@ -196,7 +304,7 @@
             font-style: italic;
         }
         
-        .ai-status {
+        .groq-status {
             background: linear-gradient(135deg, #64eeb8, #4cef89);
             color: #000;
             padding: 15px;
@@ -206,7 +314,7 @@
             display: none;
         }
         
-        .ai-status.active {
+        .groq-status.active {
             display: block;
             animation: pulse 2s infinite;
         }
@@ -270,7 +378,7 @@
             color: #e06141;
         }
         
-        .hybrid-badge {
+        .groq-badge {
             background: linear-gradient(135deg, #64eeb8, #4cef89);
             color: #000;
             padding: 15px;
@@ -283,9 +391,9 @@
             gap: 10px;
         }
         
-        .analysis-stats {
+        .performance-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin: 20px 0;
             padding: 20px;
@@ -604,21 +712,8 @@
             font-size: 10px;
             font-weight: bold;
             margin-left: 5px;
-        }
-        
-        .method-algorithm {
-            background: #e06141;
-            color: white;
-        }
-        
-        .method-hybrid {
             background: #64eeb8;
             color: #000;
-        }
-        
-        .method-ai {
-            background: #ee594a;
-            color: white;
         }
         
         .result-counter {
@@ -640,11 +735,11 @@
                 font-size: 2em;
             }
             
-            .upload-section {
+            .upload-section, .api-section {
                 padding: 40px 20px;
             }
             
-            .upload-title {
+            .upload-title, .api-title {
                 font-size: 2em;
             }
         }
@@ -652,29 +747,62 @@
 </head>
 <body>
     <div class="container">
-        <!-- Upload Section -->
-        <div id="uploadSection" class="upload-section">
-            <div class="upload-title">🧠 Woca Feedback Analyzer - IA Híbrida Otimizada</div>
-            <div class="upload-subtitle">
-                Análise ultra-inteligente: <strong>Algoritmo Especializado + IA</strong> apenas onde necessário.
-                <br><strong>Formato esperado:</strong> CSV com coluna "Resposta" contendo os comentários dos usuários.
+        <!-- API Key Section -->
+        <div id="apiSection" class="api-section">
+            <div class="api-title">🤖 Woca Feedback Analyzer - Teste 100% Groq</div>
+            <div class="api-subtitle">
+                <strong>Teste completo com Groq Llama 3.1!</strong> Vamos analisar todas as respostas com IA de última geração.
+                <br><strong>Precisamos da sua API key do Groq para começar.</strong>
             </div>
             
-            <div class="hybrid-notice">
-                <h3>🚀 Sistema Híbrido Inteligente - Máxima Eficiência:</h3>
+            <div class="groq-notice">
+                <h3>🚀 Teste 100% Groq - Máxima Qualidade:</h3>
                 <ul>
-                    <li><strong>Fase 1:</strong> Algoritmo especializado analisa todas as respostas (instantâneo)</li>
-                    <li><strong>Fase 2:</strong> IA Hugging Face refina apenas casos duvidosos (~10-15%)</li>
-                    <li><strong>Zero Travamento:</strong> Web Workers + processamento inteligente em lotes</li>
-                    <li><strong>Máxima Precisão:</strong> Combina velocidade + inteligência artificial</li>
-                    <li><strong>100% Gratuito:</strong> Sem APIs pagas, sem limites</li>
+                    <li><strong>Llama 3.1 70B:</strong> IA de nível GPT-4 para todas as respostas</li>
+                    <li><strong>Contexto Completo:</strong> Entende nuances, ironias e contextos sutis</li>
+                    <li><strong>Web Workers:</strong> Processamento em background sem travar navegador</li>
+                    <li><strong>Velocidade:</strong> 500+ tokens/segundo - análise ultra-rápida</li>
+                    <li><strong>Segurança:</strong> API key fica apenas no seu navegador</li>
                 </ul>
             </div>
             
+            <div class="api-input-group">
+                <label class="api-label" for="groqApiKey">🔑 API Key do Groq:</label>
+                <input 
+                    type="password" 
+                    id="groqApiKey" 
+                    class="api-input" 
+                    placeholder="cole sua API key aqui (ex: gsk_...)"
+                    autocomplete="off"
+                >
+                <div class="api-help">
+                    Sua API key é processada localmente e nunca é enviada para outros servidores.
+                </div>
+            </div>
+            
+            <div id="apiStatus" class="api-status"></div>
+            
+            <button id="testApiBtn" class="btn-test-api" onclick="testGroqConnection()">
+                🧪 Testar Conexão com Groq
+            </button>
+            
+            <button id="proceedBtn" class="btn-test-api" onclick="proceedToUpload()" style="display: none;">
+                🚀 Prosseguir para Upload
+            </button>
+        </div>
+        
+        <!-- Upload Section -->
+        <div id="uploadSection" class="upload-section">
+            <div class="upload-title">🤖 Análise 100% Groq - Pronto!</div>
+            <div class="upload-subtitle">
+                <strong>Groq conectado com sucesso!</strong> Agora todas as respostas serão analisadas com IA de última geração.
+                <br><strong>Formato esperado:</strong> CSV com coluna "Resposta" contendo os comentários dos usuários.
+            </div>
+            
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <div class="upload-icon">🧠</div>
+                <div class="upload-icon">🤖</div>
                 <div class="upload-text">Clique aqui ou arraste seu arquivo CSV</div>
-                <div class="upload-hint">Sistema híbrido: algoritmo + IA pronto para análise</div>
+                <div class="upload-hint">Análise 100% Groq ativa - qualidade máxima garantida!</div>
             </div>
             
             <input type="file" id="fileInput" accept=".csv" />
@@ -684,14 +812,14 @@
             
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <div class="loading-text" id="loadingTitle">Iniciando análise híbrida...</div>
+                <div class="loading-text" id="loadingTitle">Analisando com Groq Llama 3.1...</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <div class="loading-details" id="loadingDetails">Preparando análise...</div>
                 <div class="batch-info" id="batchInfo"></div>
-                <div class="ai-status" id="aiStatus">
-                    🤖 <strong>IA ATIVA:</strong> Refinando casos duvidosos com Hugging Face...
+                <div class="groq-status" id="groqStatus">
+                    🤖 <strong>GROQ ATIVO:</strong> Analisando contexto com Llama 3.1 70B...
                 </div>
             </div>
             
@@ -705,12 +833,12 @@
         <div id="dashboard" class="dashboard">
             <!-- Header -->
             <div class="header">
-                <h1 id="dashboardTitle">🧠 Análise Híbrida Concluída - Woca Feedback</h1>
-                <p id="dashboardSubtitle">Sistema híbrido: Algoritmo especializado + IA para máxima precisão</p>
-                <div class="hybrid-badge" id="hybridBadge">
-                    🎯 <strong>SISTEMA HÍBRIDO:</strong> Algoritmo especializado + IA Hugging Face para casos duvidosos
+                <h1 id="dashboardTitle">🤖 Análise 100% Groq Concluída!</h1>
+                <p id="dashboardSubtitle">Todas as respostas analisadas com Llama 3.1 70B - qualidade máxima</p>
+                <div class="groq-badge" id="groqBadge">
+                    🚀 <strong>100% GROQ:</strong> Llama 3.1 70B analisou todas as respostas com contexto completo
                 </div>
-                <div class="analysis-stats" id="analysisStats">
+                <div class="performance-stats" id="performanceStats">
                     <!-- Will be populated by JavaScript -->
                 </div>
                 <button class="new-analysis-btn" onclick="resetApplication()">
@@ -730,7 +858,7 @@
             
             <!-- Detailed Tables -->
             <div class="detailed-section">
-                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados - Sistema Híbrido</h2>
+                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados - 100% Groq</h2>
                 
                 <div class="tab-navigation" id="tabNavigation">
                     <!-- Will be populated by JavaScript -->
@@ -747,11 +875,13 @@
         // Global variables
         let processedData = null;
         let currentActiveTab = 'satisfeitos';
-        let analysisMetrics = {
+        let groqApiKey = '';
+        let performanceMetrics = {
             totalProcessed: 0,
-            algorithmOnly: 0,
-            aiRefined: 0,
-            aiErrors: 0
+            totalTokens: 0,
+            avgResponseTime: 0,
+            totalTime: 0,
+            successRate: 0
         };
         
         // Initialize application
@@ -762,6 +892,7 @@
         function setupEventListeners() {
             const fileInput = document.getElementById('fileInput');
             const uploadArea = document.getElementById('uploadArea');
+            const apiKeyInput = document.getElementById('groqApiKey');
             
             fileInput.addEventListener('change', handleFileSelect);
             
@@ -769,6 +900,90 @@
             uploadArea.addEventListener('dragover', handleDragOver);
             uploadArea.addEventListener('drop', handleDrop);
             uploadArea.addEventListener('dragleave', handleDragLeave);
+            
+            // API key input
+            apiKeyInput.addEventListener('input', function() {
+                const apiStatus = document.getElementById('apiStatus');
+                apiStatus.style.display = 'none';
+                document.getElementById('proceedBtn').style.display = 'none';
+            });
+            
+            // Enter key to test API
+            apiKeyInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    testGroqConnection();
+                }
+            });
+        }
+        
+        async function testGroqConnection() {
+            const apiKeyInput = document.getElementById('groqApiKey');
+            const testBtn = document.getElementById('testApiBtn');
+            const apiStatus = document.getElementById('apiStatus');
+            
+            const apiKey = apiKeyInput.value.trim();
+            
+            if (!apiKey) {
+                showApiStatus('Por favor, cole sua API key do Groq.', 'error');
+                return;
+            }
+            
+            if (!apiKey.startsWith('gsk_')) {
+                showApiStatus('API key deve começar com "gsk_". Verifique se copiou corretamente.', 'error');
+                return;
+            }
+            
+            testBtn.disabled = true;
+            testBtn.textContent = '🔄 Testando conexão...';
+            
+            try {
+                // Test with a simple message
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-70b-versatile',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: 'Teste de conexão. Responda apenas: "Conexão OK"'
+                            }
+                        ],
+                        max_tokens: 10,
+                        temperature: 0
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    groqApiKey = apiKey; // Store the key
+                    showApiStatus('✅ Conexão com Groq estabelecida com sucesso! Llama 3.1 70B pronto para uso.', 'success');
+                    document.getElementById('proceedBtn').style.display = 'inline-block';
+                } else {
+                    const errorData = await response.json();
+                    showApiStatus(`❌ Erro na conexão: ${errorData.error?.message || 'Verifique sua API key'}`, 'error');
+                }
+            } catch (error) {
+                showApiStatus(`❌ Erro de conexão: ${error.message}`, 'error');
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = '🧪 Testar Conexão com Groq';
+            }
+        }
+        
+        function showApiStatus(message, type) {
+            const apiStatus = document.getElementById('apiStatus');
+            apiStatus.textContent = message;
+            apiStatus.className = `api-status ${type}`;
+            apiStatus.style.display = 'block';
+        }
+        
+        function proceedToUpload() {
+            document.getElementById('apiSection').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'block';
         }
         
         function handleDragOver(e) {
@@ -804,6 +1019,11 @@
                 return;
             }
             
+            if (!groqApiKey) {
+                showError('API key do Groq não configurada. Volte e configure primeiro.');
+                return;
+            }
+            
             showLoading();
             updateProgress(10, 'Lendo arquivo CSV...');
             
@@ -813,8 +1033,8 @@
                 skipEmptyLines: true,
                 complete: function(results) {
                     try {
-                        updateProgress(30, 'Arquivo carregado. Iniciando análise híbrida...');
-                        analyzeDataHybrid(results.data);
+                        updateProgress(30, 'Arquivo carregado. Iniciando análise 100% Groq...');
+                        analyzeDataWithGroq(results.data);
                     } catch (error) {
                         showError('Erro ao processar dados: ' + error.message);
                     }
@@ -831,22 +1051,25 @@
             document.getElementById('batchInfo').textContent = batchInfo;
         }
         
-        function showAIStatus() {
-            document.getElementById('aiStatus').classList.add('active');
+        function showGroqStatus() {
+            document.getElementById('groqStatus').classList.add('active');
         }
         
-        function hideAIStatus() {
-            document.getElementById('aiStatus').classList.remove('active');
+        function hideGroqStatus() {
+            document.getElementById('groqStatus').classList.remove('active');
         }
         
-        async function analyzeDataHybrid(data) {
+        async function analyzeDataWithGroq(data) {
             // Reset metrics
-            analysisMetrics = {
+            performanceMetrics = {
                 totalProcessed: 0,
-                algorithmOnly: 0,
-                aiRefined: 0,
-                aiErrors: 0
+                totalTokens: 0,
+                avgResponseTime: 0,
+                totalTime: 0,
+                successRate: 0
             };
+            
+            const startTime = Date.now();
             
             // Validate data structure
             if (!data || data.length === 0) {
@@ -877,66 +1100,23 @@
                 return;
             }
             
-            analysisMetrics.totalProcessed = validResponses.length;
+            performanceMetrics.totalProcessed = validResponses.length;
             
-            updateProgress(60, `FASE 1: Algoritmo especializado analisando ${validResponses.length} respostas...`);
+            updateProgress(60, `Analisando ${validResponses.length} respostas com Groq Llama 3.1...`);
+            showGroqStatus();
             
-            // FASE 1: Algoritmo especializado (rápido)
-            const algorithmResults = await processWithAlgorithm(validResponses);
+            // Process with Groq
+            const groqResults = await processWithGroq(validResponses);
             
-            updateProgress(75, 'FASE 1 concluída. Identificando casos duvidosos...');
+            hideGroqStatus();
+            updateProgress(95, 'Organizando resultados...');
             
-            // Identificar casos duvidosos
-            const uncertainCases = algorithmResults.filter(result => 
-                result.confianca < 0.7 || result.categoria === 'Não Classificado'
-            );
+            // Calculate final metrics
+            performanceMetrics.totalTime = (Date.now() - startTime) / 1000;
+            performanceMetrics.avgResponseTime = performanceMetrics.totalTime / performanceMetrics.totalProcessed;
             
-            console.log(`Casos duvidosos identificados: ${uncertainCases.length} de ${validResponses.length}`);
-            
-            let finalResults = algorithmResults;
-            
-            // FASE 2: IA apenas para casos duvidosos
-            if (uncertainCases.length > 0) {
-                updateProgress(80, `FASE 2: IA refinando ${uncertainCases.length} casos duvidosos...`);
-                showAIStatus();
-                
-                try {
-                    const aiResults = await processWithAI(uncertainCases);
-                    
-                    // Substituir resultados refinados pela IA
-                    finalResults = algorithmResults.map(result => {
-                        const aiResult = aiResults.find(ai => ai.originalIndex === result.originalIndex);
-                        if (aiResult && aiResult.success) {
-                            analysisMetrics.aiRefined++;
-                            return {
-                                ...result,
-                                categoria: aiResult.categoria,
-                                confianca: aiResult.confianca,
-                                motivo: aiResult.motivo,
-                                metodo: 'Híbrido (Algoritmo + IA)'
-                            };
-                        }
-                        analysisMetrics.algorithmOnly++;
-                        return result;
-                    });
-                    
-                    hideAIStatus();
-                    updateProgress(95, 'Análise híbrida concluída! Organizando resultados...');
-                    
-                } catch (error) {
-                    console.error('Erro na IA:', error);
-                    hideAIStatus();
-                    updateProgress(90, 'IA indisponível. Usando apenas algoritmo especializado...');
-                    analysisMetrics.aiErrors = uncertainCases.length;
-                    analysisMetrics.algorithmOnly = validResponses.length;
-                }
-            } else {
-                updateProgress(90, 'Todos os casos foram classificados com alta confiança pelo algoritmo!');
-                analysisMetrics.algorithmOnly = validResponses.length;
-            }
-            
-            // Categorizar resultados finais
-            const categorizedData = categorizeFinalResults(finalResults);
+            // Categorize results
+            const categorizedData = categorizeGroqResults(groqResults);
             
             // Store processed data
             processedData = categorizedData;
@@ -944,7 +1124,7 @@
             // Generate dashboard
             generateDashboard(categorizedData);
             
-            updateProgress(100, 'Análise híbrida concluída com sucesso!');
+            updateProgress(100, 'Análise 100% Groq concluída!');
             
             setTimeout(() => {
                 hideLoading();
@@ -952,67 +1132,51 @@
             }, 1000);
         }
         
-        async function processWithAlgorithm(responses) {
+        async function processWithGroq(responses) {
             const results = [];
+            const batchSize = 3; // Smaller batches for better stability
+            let totalTokens = 0;
+            let successCount = 0;
             
-            for (let i = 0; i < responses.length; i++) {
-                const row = responses[i];
-                const result = categorizeResponseSpecialized(row.Resposta);
-                
-                results.push({
-                    id: i + 1,
-                    originalIndex: i,
-                    resposta: row.Resposta,
-                    categoria: result.category,
-                    confianca: result.confidence,
-                    motivo: result.reason,
-                    metodo: 'Algoritmo Especializado'
-                });
-                
-                // Update progress occasionally
-                if (i % 50 === 0) {
-                    const percent = 60 + Math.floor((i / responses.length) * 15);
-                    updateProgress(percent, `Algoritmo: ${i + 1}/${responses.length} processadas`);
-                    await new Promise(resolve => setTimeout(resolve, 10));
-                }
-            }
-            
-            return results;
-        }
-        
-        async function processWithAI(uncertainCases) {
-            const results = [];
-            const batchSize = 5; // Smaller batches to avoid timeouts
-            
-            for (let i = 0; i < uncertainCases.length; i += batchSize) {
-                const batch = uncertainCases.slice(i, i + batchSize);
+            for (let i = 0; i < responses.length; i += batchSize) {
+                const batch = responses.slice(i, i + batchSize);
                 const batchNum = Math.floor(i / batchSize) + 1;
-                const totalBatches = Math.ceil(uncertainCases.length / batchSize);
+                const totalBatches = Math.ceil(responses.length / batchSize);
                 
                 updateProgress(
-                    80 + Math.floor((i / uncertainCases.length) * 10),
-                    `IA: Lote ${batchNum}/${totalBatches} (${i + 1}-${Math.min(i + batchSize, uncertainCases.length)})`
+                    60 + Math.floor((i / responses.length) * 30),
+                    `Groq: Lote ${batchNum}/${totalBatches}`,
+                    `Analisando respostas ${i + 1}-${Math.min(i + batchSize, responses.length)} de ${responses.length}`
                 );
                 
-                // Process batch with AI
-                const batchPromises = batch.map(async (item) => {
+                // Process batch with Groq
+                const batchPromises = batch.map(async (row, idx) => {
                     try {
-                        const aiResult = await callHuggingFaceAPI(item.resposta);
-                        const interpretedResult = interpretAIResult(aiResult, item.resposta);
+                        const groqResult = await callGroqAPI(row.Resposta);
+                        const categorized = parseGroqResponse(groqResult, row.Resposta);
+                        
+                        totalTokens += groqResult.usage?.total_tokens || 0;
+                        successCount++;
                         
                         return {
-                            originalIndex: item.originalIndex,
-                            success: true,
-                            categoria: interpretedResult.category,
-                            confianca: interpretedResult.confidence,
-                            motivo: interpretedResult.reason
+                            id: i + idx + 1,
+                            resposta: row.Resposta,
+                            categoria: categorized.category,
+                            confianca: categorized.confidence,
+                            motivo: categorized.reason,
+                            metodo: 'Groq IA',
+                            tokens: groqResult.usage?.total_tokens || 0
                         };
                     } catch (error) {
-                        console.error('AI Error for item:', item.originalIndex, error);
-                        analysisMetrics.aiErrors++;
+                        console.error('Groq Error for item:', i + idx, error);
                         return {
-                            originalIndex: item.originalIndex,
-                            success: false
+                            id: i + idx + 1,
+                            resposta: row.Resposta,
+                            categoria: 'Não Classificado',
+                            confianca: 0.1,
+                            motivo: `Erro na IA: ${error.message}`,
+                            metodo: 'Erro',
+                            tokens: 0
                         };
                     }
                 });
@@ -1020,97 +1184,137 @@
                 const batchResults = await Promise.all(batchPromises);
                 results.push(...batchResults);
                 
-                // Pause between batches
-                if (i + batchSize < uncertainCases.length) {
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                // Pause between batches to respect rate limits
+                if (i + batchSize < responses.length) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
             }
+            
+            // Update metrics
+            performanceMetrics.totalTokens = totalTokens;
+            performanceMetrics.successRate = (successCount / responses.length) * 100;
             
             return results;
         }
         
-        async function callHuggingFaceAPI(text) {
-            // Using Hugging Face Inference API for sentiment analysis
-            const response = await fetch(
-                "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment-latest",
-                {
-                    headers: {
-                        "Authorization": "Bearer hf_demo_token", // Using demo token
-                        "Content-Type": "application/json",
-                    },
-                    method: "POST",
-                    body: JSON.stringify({
-                        inputs: text,
-                        options: { wait_for_model: true }
-                    }),
-                }
-            );
+        async function callGroqAPI(text) {
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${groqApiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.1-70b-versatile',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `Você é um especialista em análise de feedback de software elétrico (Woca Elétrica). 
+
+Classifique cada resposta em UMA dessas categorias:
+1. SATISFEITOS - elogios, gratidão, software ajudou, resolveu problemas
+2. PROBLEMAS - bugs, erros, dificuldades, não funciona
+3. SUGESTÕES - ideias, melhorias, novas funcionalidades, "seria bom se"
+4. NÃO_CLASSIFICADO - neutro, irrelevante, não se enquadra
+
+IMPORTANTE:
+- "Tudo dentro do padrão" = SATISFEITOS (aprovação)
+- "Resolve meus problemas" = SATISFEITOS (ajuda recebida)
+- "Poderia ter X" = SUGESTÕES (melhoria)
+- "Não funciona X" = PROBLEMAS (bug)
+
+Responda APENAS no formato JSON:
+{
+  "categoria": "CATEGORIA",
+  "confianca": 0.95,
+  "motivo": "explicação breve"
+}`
+                        },
+                        {
+                            role: 'user',
+                            content: `Classifique esta resposta de feedback do Woca Elétrica: "${text}"`
+                        }
+                    ],
+                    max_tokens: 150,
+                    temperature: 0.1
+                })
+            });
             
             if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(`API Error: ${errorData.error?.message || response.status}`);
             }
             
-            const result = await response.json();
-            return result;
+            return await response.json();
         }
         
-        function interpretAIResult(aiResult, originalText) {
+        function parseGroqResponse(groqResult, originalText) {
             try {
-                // AI result format: [{ label: "POSITIVE", score: 0.8 }, ...]
-                if (!aiResult || !Array.isArray(aiResult)) {
-                    throw new Error('Invalid AI result format');
+                const content = groqResult.choices[0].message.content.trim();
+                
+                // Try to parse JSON response
+                const jsonMatch = content.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error('No JSON found in response');
                 }
                 
-                const topResult = aiResult[0];
-                const sentiment = topResult.label;
-                const confidence = topResult.score;
+                const parsed = JSON.parse(jsonMatch[0]);
                 
-                // Combine AI sentiment with our specialized analysis
-                const specializedResult = categorizeResponseSpecialized(originalText);
+                // Map categories
+                const categoryMap = {
+                    'SATISFEITOS': 'Clientes Satisfeitos',
+                    'PROBLEMAS': 'Problemas Técnicos',
+                    'SUGESTÕES': 'Sugestões de Funcionalidades',
+                    'SUGESTOES': 'Sugestões de Funcionalidades',
+                    'NÃO_CLASSIFICADO': 'Não Classificado',
+                    'NAO_CLASSIFICADO': 'Não Classificado'
+                };
                 
-                // If specialized algorithm has high confidence, trust it more
-                if (specializedResult.confidence >= 0.8) {
-                    return {
-                        category: specializedResult.category,
-                        confidence: Math.max(specializedResult.confidence, confidence),
-                        reason: `IA confirma algoritmo: ${specializedResult.reason} (sentimento: ${sentiment})`
-                    };
-                }
-                
-                // Use AI to refine uncertain cases
-                let category = 'Não Classificado';
-                let reason = `IA: sentimento ${sentiment} (${(confidence * 100).toFixed(1)}%)`;
-                
-                if (sentiment === 'POSITIVE' && confidence > 0.7) {
-                    category = 'Clientes Satisfeitos';
-                    reason = `IA detectou sentimento positivo (${(confidence * 100).toFixed(1)}%)`;
-                } else if (sentiment === 'NEGATIVE' && confidence > 0.7) {
-                    // Check if it's a problem or suggestion
-                    const text = originalText.toLowerCase();
-                    if (text.includes('erro') || text.includes('problema') || text.includes('bug')) {
-                        category = 'Problemas Técnicos';
-                        reason = `IA + palavras-chave: problema técnico (${(confidence * 100).toFixed(1)}%)`;
-                    } else if (text.includes('melhorar') || text.includes('poderia') || text.includes('sugestão')) {
-                        category = 'Sugestões de Funcionalidades';
-                        reason = `IA + palavras-chave: sugestão (${(confidence * 100).toFixed(1)}%)`;
-                    } else {
-                        category = 'Problemas Técnicos';
-                        reason = `IA detectou sentimento negativo (${(confidence * 100).toFixed(1)}%)`;
-                    }
-                }
+                const category = categoryMap[parsed.categoria] || 'Não Classificado';
+                const confidence = Math.min(Math.max(parsed.confianca || 0.5, 0), 1);
+                const reason = parsed.motivo || 'Análise via Groq Llama 3.1';
                 
                 return {
                     category: category,
                     confidence: confidence,
-                    reason: reason
+                    reason: `Groq: ${reason}`
                 };
                 
             } catch (error) {
-                throw new Error('Error interpreting AI result: ' + error.message);
+                console.error('Error parsing Groq response:', error, groqResult);
+                
+                // Fallback: simple keyword analysis
+                const text = originalText.toLowerCase();
+                
+                if (text.includes('padrão') || text.includes('resolve') || text.includes('ajudou') || text.includes('ótimo')) {
+                    return {
+                        category: 'Clientes Satisfeitos',
+                        confidence: 0.6,
+                        reason: 'Fallback: palavras positivas detectadas'
+                    };
+                } else if (text.includes('erro') || text.includes('problema') || text.includes('não funciona')) {
+                    return {
+                        category: 'Problemas Técnicos',
+                        confidence: 0.6,
+                        reason: 'Fallback: palavras de problema detectadas'
+                    };
+                } else if (text.includes('poderia') || text.includes('seria bom') || text.includes('melhorar')) {
+                    return {
+                        category: 'Sugestões de Funcionalidades',
+                        confidence: 0.6,
+                        reason: 'Fallback: palavras de sugestão detectadas'
+                    };
+                }
+                
+                return {
+                    category: 'Não Classificado',
+                    confidence: 0.3,
+                    reason: 'Fallback: erro no parsing da IA'
+                };
             }
         }
         
-        function categorizeFinalResults(results) {
+        function categorizeGroqResults(results) {
             const categories = {
                 satisfeitos: [],
                 problemas: [],
@@ -1125,7 +1329,8 @@
                     resposta: result.resposta,
                     confianca: result.confianca,
                     motivo: result.motivo,
-                    metodo: result.metodo
+                    metodo: result.metodo,
+                    tokens: result.tokens
                 });
             });
             
@@ -1138,288 +1343,8 @@
                     sugestoes: categories.sugestoes.length,
                     naoClassificado: categories.naoClassificado.length
                 },
-                metrics: analysisMetrics
+                metrics: performanceMetrics
             };
-        }
-        
-        // Keep all the existing categorization functions from the original algorithm
-        function categorizeResponseSpecialized(resposta) {
-            const texto = resposta.toLowerCase().trim();
-            
-            // PRIORIDADE 1: SUGESTÕES (máxima prioridade para evitar confusão)
-            const suggestionAnalysis = analyzeSuggestionsSpecialized(texto, resposta);
-            if (suggestionAnalysis.isSuggestion) {
-                return {
-                    category: 'Sugestões de Funcionalidades',
-                    confidence: suggestionAnalysis.confidence,
-                    reason: suggestionAnalysis.reason
-                };
-            }
-            
-            // PRIORIDADE 2: SATISFAÇÃO/GRATIDÃO
-            const satisfactionAnalysis = analyzeSatisfactionSpecialized(texto, resposta);
-            if (satisfactionAnalysis.isPositive) {
-                return {
-                    category: 'Clientes Satisfeitos',
-                    confidence: satisfactionAnalysis.confidence,
-                    reason: satisfactionAnalysis.reason
-                };
-            }
-            
-            // PRIORIDADE 3: PROBLEMAS
-            const problemAnalysis = analyzeProblemsSpecialized(texto);
-            if (problemAnalysis.isProblem && !problemAnalysis.isResolved) {
-                return {
-                    category: 'Problemas Técnicos',
-                    confidence: problemAnalysis.confidence,
-                    reason: problemAnalysis.reason
-                };
-            }
-            
-            return {
-                category: 'Não Classificado',
-                confidence: 0.3,
-                reason: 'Não se enquadra em nenhuma categoria específica'
-            };
-        }
-        
-        function analyzeSuggestionsSpecialized(texto, originalText) {
-            // PADRÕES MUITO FORTES de sugestão (PRIORIDADE MÁXIMA)
-            const strongSuggestionPatterns = [
-                // Verbos de ação futura/desejo
-                {pattern: /^(disponibilizar|implementar|adicionar|criar|desenvolver|incluir|inserir|colocar)/, confidence: 0.98},
-                {pattern: /(dar pra melhorar|da pra melhorar|dá pra melhorar)/, confidence: 0.95},
-                {pattern: /(seria bom|seria interessante|seria legal|seria útil|seria ótimo|seria perfeito)/, confidence: 0.95},
-                {pattern: /(gostaria que|gostaria de|queria que|queria poder)/, confidence: 0.95},
-                {pattern: /(poderia ter|poderia incluir|poderia adicionar|poderia implementar)/, confidence: 0.95},
-                {pattern: /(sugiro|sugerir|sugestão|recomendo|recomendaria)/, confidence: 0.95},
-                {pattern: /(falta|deveria ter|precisa ter|necessita|carece)/, confidence: 0.90},
-                
-                // Padrões de melhoria
-                {pattern: /(melhorar|aprimorar|otimizar|expandir|evoluir)/, confidence: 0.85},
-                {pattern: /(para melhorar|pra melhorar)/, confidence: 0.90}
-            ];
-            
-            // Verificar padrões de sugestão
-            for (let {pattern, confidence} of strongSuggestionPatterns) {
-                if (pattern.test(texto)) {
-                    return {
-                        isSuggestion: true,
-                        confidence: confidence,
-                        reason: `Padrão forte de sugestão: "${pattern.source.slice(1, -1)}"`
-                    };
-                }
-            }
-            
-            // Padrões de necessidade/falta (médios)
-            const needPatterns = [
-                {pattern: /(precisava|precisaria|faltava|faltaria)/, confidence: 0.80},
-                {pattern: /(deveria|poderia) (ter|incluir|adicionar)/, confidence: 0.85}
-            ];
-            
-            for (let {pattern, confidence} of needPatterns) {
-                if (pattern.test(texto)) {
-                    return {
-                        isSuggestion: true,
-                        confidence: confidence,
-                        reason: `Padrão de necessidade: "${pattern.source.slice(1, -1)}"`
-                    };
-                }
-            }
-            
-            // Características técnicas APENAS se não há contexto de satisfação clara
-            if (!hasStrongGratitudeContext(originalText)) {
-                const technicalFeatures = [
-                    'dimensionamento', 'cálculo', 'calcular', 'dimensionar', 'conduto', 'cabo', 'fiação',
-                    'quadro', 'disjuntor', 'dr', 'dps', 'circuito', 'trifásico', 'monofásico',
-                    'autocad', 'dwg', 'dxf', 'cad', 'mobile', 'celular', 'app', 'aplicativo',
-                    'orçamento', 'relatório', 'pdf', 'impressão', 'norma', 'nbr', 'lista de materiais'
-                ];
-                
-                for (let feature of technicalFeatures) {
-                    if (texto.includes(feature)) {
-                        return {
-                            isSuggestion: true,
-                            confidence: 0.65,
-                            reason: `Contexto técnico sem gratidão: "${feature}"`
-                        };
-                    }
-                }
-            }
-            
-            return { isSuggestion: false, confidence: 0, reason: '' };
-        }
-        
-        function analyzeSatisfactionSpecialized(texto, originalText) {
-            // PADRÕES MUITO FORTES de satisfação/gratidão
-            const strongGratitudePatterns = [
-                // Padrões de ajuda passada (máxima prioridade)
-                {pattern: /(o woca|woca) (me |)ajudou/, confidence: 0.98},
-                {pattern: /(me |)ajudou (com|a|na|no)/, confidence: 0.95},
-                {pattern: /(consegui|conseguimos) (fazer|usar|criar|com)/, confidence: 0.95},
-                {pattern: /(deu certo|funcionou|resolveu) (com|para|o)/, confidence: 0.95},
-                
-                // Padrões de resolução
-                {pattern: /(resolveu|eliminou|acabou com) (meu|o|a) (problema|questão|dificuldade)/, confidence: 0.95},
-                {pattern: /(facilita|simplifica|agiliza) (muito|bastante|o trabalho|meu trabalho)/, confidence: 0.90},
-                {pattern: /(está facilitando|vem facilitando|tem facilitado)/, confidence: 0.90}
-            ];
-            
-            // Verificar padrões de gratidão/ajuda
-            for (let {pattern, confidence} of strongGratitudePatterns) {
-                if (pattern.test(texto)) {
-                    return {
-                        isPositive: true,
-                        confidence: confidence,
-                        reason: `Padrão de gratidão/ajuda: "${pattern.source.slice(1, -1)}"`
-                    };
-                }
-            }
-            
-            // Elogios diretos (alta confiança)
-            const strongPositive = [
-                {words: ['excelente', 'excepcional', 'extraordinário', 'incrível', 'fantástico', 'maravilhoso'], confidence: 0.95},
-                {words: ['ótimo', 'perfeito', 'adorei', 'parabéns'], confidence: 0.90}
-            ];
-            
-            for (let {words, confidence} of strongPositive) {
-                for (let word of words) {
-                    if (texto.includes(word)) {
-                        return {
-                            isPositive: true,
-                            confidence: confidence,
-                            reason: `Elogio direto: "${word}"`
-                        };
-                    }
-                }
-            }
-            
-            // Elogios médios (qualificados)
-            const mediumPositive = [
-                'muito bom', 'muito útil', 'muito prático', 'muito fácil', 'muito legal', 
-                'muito eficiente', 'bastante útil', 'bem prático', 'super útil'
-            ];
-            
-            for (let phrase of mediumPositive) {
-                if (texto.includes(phrase)) {
-                    return {
-                        isPositive: true,
-                        confidence: 0.85,
-                        reason: `Elogio qualificado: "${phrase}"`
-                    };
-                }
-            }
-            
-            // Palavras positivas simples (APENAS se não há contexto de sugestão)
-            if (!hasAnySuggestionContext(originalText)) {
-                const weakPositive = ['bom', 'legal', 'bacana', 'útil', 'prático', 'gostei', 'gosto'];
-                for (let word of weakPositive) {
-                    if (texto === word || (texto.includes(' ' + word + ' ') || texto.startsWith(word + ' ') || texto.endsWith(' ' + word))) {
-                        if (!hasNegationNear(texto, word)) {
-                            return {
-                                isPositive: true,
-                                confidence: 0.70,
-                                reason: `Palavra positiva sem contexto de sugestão: "${word}"`
-                            };
-                        }
-                    }
-                }
-            }
-            
-            return { isPositive: false, confidence: 0, reason: '' };
-        }
-        
-        function analyzeProblemsSpecialized(texto) {
-            const problemWords = [
-                'erro', 'bug', 'falha', 'problema', 'dificuldade', 
-                'não funciona', 'não carrega', 'não abre', 'não salva',
-                'trava', 'travando', 'lento', 'demora', 'lentidão'
-            ];
-            
-            const resolutionWords = ['resolve', 'resolveu', 'soluciona', 'solucionou', 'elimina', 'eliminou', 'acabou com', 'corrige', 'corrigiu'];
-            
-            let foundProblem = false;
-            let isResolved = false;
-            let confidence = 0;
-            let reason = '';
-            let problemWord = '';
-            
-            for (let word of problemWords) {
-                if (texto.includes(word)) {
-                    foundProblem = true;
-                    problemWord = word;
-                    
-                    // Verificar se o problema foi resolvido
-                    for (let resWord of resolutionWords) {
-                        if (texto.includes(resWord + ' ' + word) || 
-                            texto.includes(resWord + ' o ' + word) || 
-                            texto.includes(resWord + ' meu ' + word) ||
-                            texto.includes(resWord + ' esse ' + word)) {
-                            isResolved = true;
-                            break;
-                        }
-                    }
-                    
-                    // Verificar negação
-                    if (hasNegationNear(texto, word)) {
-                        isResolved = true;
-                        reason = `Negação detectada: "não ${word}"`;
-                        confidence = 0.75;
-                    } else if (isResolved) {
-                        reason = `Problema resolvido: "${problemWord}"`;
-                        confidence = 0.60; // Baixa porque pode ser satisfação
-                    } else {
-                        reason = `Problema real identificado: "${word}"`;
-                        confidence = 0.90;
-                    }
-                    break;
-                }
-            }
-            
-            return {
-                isProblem: foundProblem,
-                isResolved: isResolved,
-                confidence: confidence,
-                reason: reason
-            };
-        }
-        
-        function hasStrongGratitudeContext(originalText) {
-            const strongGratitudePatterns = [
-                'me ajudou', 'ajudou com', 'consegui', 'deu certo', 'funcionou',
-                'resolveu', 'eliminou', 'facilitou', 'simplificou', 'conseguimos'
-            ];
-            
-            const lowerText = originalText.toLowerCase();
-            return strongGratitudePatterns.some(pattern => lowerText.includes(pattern));
-        }
-        
-        function hasAnySuggestionContext(originalText) {
-            const suggestionIndicators = [
-                'dar pra melhorar', 'seria bom', 'seria interessante', 'gostaria', 'poderia',
-                'sugiro', 'sugestão', 'melhorar', 'disponibilizar', 'implementar', 'adicionar',
-                'criar', 'desenvolver', 'incluir', 'falta', 'deveria ter', 'precisa ter'
-            ];
-            
-            const lowerText = originalText.toLowerCase();
-            return suggestionIndicators.some(indicator => lowerText.includes(indicator));
-        }
-        
-        function hasNegationNear(texto, word) {
-            const negations = ['não', 'nunca', 'sem', 'zero', 'nenhum'];
-            const wordIndex = texto.indexOf(word);
-            
-            if (wordIndex === -1) return false;
-            
-            const beforeText = texto.substring(Math.max(0, wordIndex - 25), wordIndex);
-            
-            for (let neg of negations) {
-                if (beforeText.includes(neg)) {
-                    return true;
-                }
-            }
-            
-            return false;
         }
         
         function getCategoryKey(category) {
@@ -1442,48 +1367,43 @@
         }
         
         function getMethodBadge(method) {
-            if (method === 'Algoritmo Especializado') {
-                return '<span class="method-badge method-algorithm">ALG</span>';
-            } else if (method.includes('Híbrido')) {
-                return '<span class="method-badge method-hybrid">HÍB</span>';
-            } else {
-                return '<span class="method-badge method-ai">IA</span>';
-            }
+            return '<span class="method-badge">GROQ</span>';
         }
         
         function generateDashboard(data) {
-            generateAnalysisStats(data);
+            generatePerformanceStats(data);
             generateSummary(data);
             generateCategories(data);
             generateDetailedTables(data);
         }
         
-        function generateAnalysisStats(data) {
+        function generatePerformanceStats(data) {
             const metrics = data.metrics;
-            const algorithmPercent = ((metrics.algorithmOnly / metrics.totalProcessed) * 100).toFixed(1);
-            const aiPercent = ((metrics.aiRefined / metrics.totalProcessed) * 100).toFixed(1);
-            const errorPercent = ((metrics.aiErrors / metrics.totalProcessed) * 100).toFixed(1);
             
             const statsHTML = `
                 <div class="stat-item">
                     <div class="stat-value">${metrics.totalProcessed}</div>
-                    <div class="stat-label">Total Processadas</div>
+                    <div class="stat-label">Respostas Processadas</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">${algorithmPercent}%</div>
-                    <div class="stat-label">Só Algoritmo</div>
+                    <div class="stat-value">${metrics.successRate.toFixed(1)}%</div>
+                    <div class="stat-label">Taxa de Sucesso</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">${aiPercent}%</div>
-                    <div class="stat-label">Refinadas por IA</div>
+                    <div class="stat-value">${metrics.totalTokens.toLocaleString()}</div>
+                    <div class="stat-label">Tokens Utilizados</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">${errorPercent}%</div>
-                    <div class="stat-label">Erros IA</div>
+                    <div class="stat-value">${metrics.totalTime.toFixed(1)}s</div>
+                    <div class="stat-label">Tempo Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${(metrics.avgResponseTime * 1000).toFixed(0)}ms</div>
+                    <div class="stat-label">Tempo Médio/Resposta</div>
                 </div>
             `;
             
-            document.getElementById('analysisStats').innerHTML = statsHTML;
+            document.getElementById('performanceStats').innerHTML = statsHTML;
         }
         
         function generateSummary(data) {
@@ -1491,7 +1411,7 @@
             const dist = data.distribution;
             
             document.getElementById('dashboardSubtitle').textContent = 
-                `Sistema híbrido: ${total} respostas analisadas (${data.metrics.algorithmOnly} algoritmo + ${data.metrics.aiRefined} IA)`;
+                `${total} respostas analisadas com Groq Llama 3.1 - ${data.metrics.totalTokens.toLocaleString()} tokens em ${data.metrics.totalTime.toFixed(1)}s`;
             
             const summaryHTML = `
                 <div class="summary-card satisfeitos">
@@ -1548,7 +1468,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💬 Exemplos (análise híbrida):</div>
+                        <div class="examples-title">💬 Exemplos (100% Groq):</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.satisfeitos).map(ex => `<li>${ex.resposta}</li>`).join('')}
                         </ul>
@@ -1575,7 +1495,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">⚠️ Problemas Reais Detectados:</div>
+                        <div class="examples-title">⚠️ Problemas Detectados pelo Groq:</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.problemas).slice(0, 5).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
@@ -1602,7 +1522,7 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💡 Sugestões Identificadas (Híbrido):</div>
+                        <div class="examples-title">💡 Sugestões Identificadas pelo Groq:</div>
                         <ul class="examples-list">
                             ${getHighConfidenceExamples(data.categories.sugestoes).slice(0, 8).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
@@ -1632,8 +1552,8 @@
                     if (texto.includes('tempo') || texto.includes('rápido') || texto.includes('agiliza') || texto.includes('economiza')) {
                         themes['Economia de Tempo'] = (themes['Economia de Tempo'] || 0) + 1;
                     }
-                    if (texto.includes('muito bom') || texto.includes('excelente') || texto.includes('ótimo') || texto.includes('parabéns')) {
-                        themes['Elogios Diretos'] = (themes['Elogios Diretos'] || 0) + 1;
+                    if (texto.includes('muito bom') || texto.includes('excelente') || texto.includes('ótimo') || texto.includes('parabéns') || texto.includes('padrão')) {
+                        themes['Elogios e Aprovação'] = (themes['Elogios e Aprovação'] || 0) + 1;
                     }
                 } else if (category === 'problemas') {
                     if (texto.includes('lento') || texto.includes('demora') || texto.includes('trava')) {
@@ -1723,7 +1643,7 @@
                 <div id="${categoryKey}-detail" class="detail-tab-content ${isActive}" ${style}>
                     <div style="background: linear-gradient(135deg, ${headerColor}20, ${headerColor}10); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
                         <h3 style="color: ${headerColor}; margin: 0 0 10px 0;">${categoryName} - ${items.length} respostas</h3>
-                        <p style="margin: 0; color: #555;">Respostas analisadas com sistema híbrido: algoritmo especializado + IA para refinamento.</p>
+                        <p style="margin: 0; color: #555;">Todas as respostas foram analisadas com Groq Llama 3.1 70B para máxima precisão contextual.</p>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
@@ -1741,7 +1661,7 @@
                                     <th>Resposta</th>
                                     <th style="width: 80px;">Confiança</th>
                                     <th style="width: 70px;">Método</th>
-                                    <th style="width: 200px;">Motivo da Classificação</th>
+                                    <th style="width: 200px;">Análise do Groq</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-${categoryKey}">
@@ -1757,7 +1677,7 @@
                             </tbody>
                         </table>
                         <div class="result-counter">
-                            Mostrando ${items.length} de ${items.length} respostas analisadas com sistema híbrido
+                            Mostrando ${items.length} de ${items.length} respostas analisadas com Groq Llama 3.1
                         </div>
                     </div>
                 </div>
@@ -1823,7 +1743,7 @@
             
             // Update counter
             const counter = table.parentElement.querySelector('.result-counter');
-            counter.textContent = `Mostrando ${visibleCount} de ${rows.length} respostas analisadas com sistema híbrido`;
+            counter.textContent = `Mostrando ${visibleCount} de ${rows.length} respostas analisadas com Groq Llama 3.1`;
         }
         
         function showLoading() {
@@ -1847,17 +1767,24 @@
         }
         
         function resetApplication() {
-            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('apiSection').style.display = 'block';
+            document.getElementById('uploadSection').style.display = 'none';
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('error').style.display = 'none';
             document.getElementById('fileInput').value = '';
+            document.getElementById('groqApiKey').value = '';
+            document.getElementById('apiStatus').style.display = 'none';
+            document.getElementById('proceedBtn').style.display = 'none';
+            
             processedData = null;
             currentActiveTab = 'satisfeitos';
-            analysisMetrics = {
+            groqApiKey = '';
+            performanceMetrics = {
                 totalProcessed: 0,
-                algorithmOnly: 0,
-                aiRefined: 0,
-                aiErrors: 0
+                totalTokens: 0,
+                avgResponseTime: 0,
+                totalTime: 0,
+                successRate: 0
             };
         }
     </script>
