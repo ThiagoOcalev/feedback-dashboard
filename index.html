@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Woca Feedback Analyzer</title>
+    <title>Woca Feedback Analyzer - Versão Melhorada</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         * {
@@ -47,6 +47,28 @@
             color: #666;
             margin-bottom: 40px;
             line-height: 1.6;
+        }
+        
+        .upgrade-notice {
+            background: linear-gradient(135deg, #64eeb8, #4cef89);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .upgrade-notice h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .upgrade-notice ul {
+            margin: 10px 0 0 20px;
+        }
+        
+        .upgrade-notice li {
+            margin-bottom: 5px;
         }
         
         .upload-area {
@@ -190,6 +212,14 @@
         .new-analysis-btn:hover {
             background: white;
             color: #e06141;
+        }
+        
+        .confidence-notice {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95em;
         }
         
         .summary-grid {
@@ -457,6 +487,30 @@
             background-color: #f8f9fa;
         }
         
+        .confidence-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .confidence-high {
+            background: #64eeb8;
+            color: #000;
+        }
+        
+        .confidence-medium {
+            background: #ffd700;
+            color: #000;
+        }
+        
+        .confidence-low {
+            background: #ff9999;
+            color: #000;
+        }
+        
         .result-counter {
             text-align: center;
             padding: 10px;
@@ -490,10 +544,21 @@
     <div class="container">
         <!-- Upload Section -->
         <div id="uploadSection" class="upload-section">
-            <div class="upload-title">📊 Woca Feedback Analyzer</div>
+            <div class="upload-title">🧠 Woca Feedback Analyzer - Versão Inteligente</div>
             <div class="upload-subtitle">
-                Faça upload do seu arquivo CSV com respostas de feedback e receba uma análise completa automaticamente.
+                Análise avançada de feedback com compreensão contextual e detecção de sentimentos.
                 <br><strong>Formato esperado:</strong> CSV com coluna "Resposta" contendo os comentários dos usuários.
+            </div>
+            
+            <div class="upgrade-notice">
+                <h3>🎯 Melhorias na Análise Contextual:</h3>
+                <ul>
+                    <li><strong>Detecção de Contexto:</strong> "resolve problema" vs "tenho problema"</li>
+                    <li><strong>Análise de Negação:</strong> "não tenho dificuldade" vs "tenho dificuldade"</li>
+                    <li><strong>Intensificadores:</strong> "muito bom" é diferente de apenas "bom"</li>
+                    <li><strong>Padrões Sintáticos:</strong> identifica estruturas como "acabou com", "eliminou"</li>
+                    <li><strong>Confiança da Classificação:</strong> cada resposta recebe um score de confiança</li>
+                </ul>
             </div>
             
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
@@ -509,7 +574,7 @@
             
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <div class="loading-text">Analisando feedback... Isso pode levar alguns segundos.</div>
+                <div class="loading-text">Analisando feedback com IA contextual... Isso pode levar alguns segundos.</div>
             </div>
             
             <div id="error" class="error">
@@ -522,8 +587,11 @@
         <div id="dashboard" class="dashboard">
             <!-- Header -->
             <div class="header">
-                <h1 id="dashboardTitle">📊 Análise de Feedback</h1>
-                <p id="dashboardSubtitle">Análise completa das respostas processadas</p>
+                <h1 id="dashboardTitle">🧠 Análise Inteligente de Feedback</h1>
+                <p id="dashboardSubtitle">Análise completa com compreensão contextual</p>
+                <div class="confidence-notice">
+                    <strong>🎯 Análise Contextual Ativa:</strong> Esta versão considera o contexto das palavras, detecta negações e analisa padrões sintáticos para uma classificação mais precisa.
+                </div>
                 <button class="new-analysis-btn" onclick="resetApplication()">
                     🔄 Nova Análise
                 </button>
@@ -541,7 +609,7 @@
             
             <!-- Detailed Tables -->
             <div class="detailed-section">
-                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados por Categoria</h2>
+                <h2 style="text-align: center; color: #e06141; margin-bottom: 30px; font-size: 2em;">📋 Dados Detalhados com Nível de Confiança</h2>
                 
                 <div class="tab-navigation" id="tabNavigation">
                     <!-- Will be populated by JavaScript -->
@@ -654,8 +722,8 @@
                 return;
             }
             
-            // Categorize responses
-            const categorizedData = categorizeResponses(validResponses);
+            // Categorize responses with improved context analysis
+            const categorizedData = categorizeResponsesWithContext(validResponses);
             
             // Store processed data
             processedData = categorizedData;
@@ -667,7 +735,7 @@
             showDashboard();
         }
         
-        function categorizeResponses(responses) {
+        function categorizeResponsesWithContext(responses) {
             const categories = {
                 satisfeitos: [],
                 problemas: [],
@@ -676,12 +744,14 @@
             };
             
             responses.forEach((row, index) => {
-                const category = categorizeResponse(row.Resposta);
-                const categoryKey = getCategoryKey(category);
+                const result = categorizeResponseAdvanced(row.Resposta);
+                const categoryKey = getCategoryKey(result.category);
                 
                 categories[categoryKey].push({
                     id: categories[categoryKey].length + 1,
-                    resposta: row.Resposta
+                    resposta: row.Resposta,
+                    confianca: result.confidence,
+                    motivo: result.reason
                 });
             });
             
@@ -697,54 +767,249 @@
             };
         }
         
-        function categorizeResponse(resposta) {
+        function categorizeResponseAdvanced(resposta) {
             const texto = resposta.toLowerCase().trim();
+            let confidence = 0;
+            let reason = '';
             
-            // 1. CLIENTES SATISFEITOS
-            if ([
-                'muito bom', 'excelente', 'ótimo', 'perfeito', 'satisfeito', 'gostei', 'parabéns', 
-                'continue assim', 'top', 'show', 'adorei', 'maravilhoso', 'fantástico', 'incrível',
-                'está bom', 'tudo bem', 'está ótimo', 'muito útil', 'ajuda muito', 'facilita muito',
-                'economia', 'economiza tempo', 'agiliza', 'prático', 'útil', 'bom programa',
-                'bom', 'legal', 'bacana', 'massa', 'maneiro', 'aprovado', 'recomendo', 'positivo', 'satisfatório', 'aproveitoso'
-            ].some(p => {
-                if (['bom', 'legal', 'top', 'show'].includes(p)) {
-                    return texto === p || texto.includes(' ' + p + ' ') || texto.startsWith(p + ' ') || texto.endsWith(' ' + p);
+            // 1. ANÁLISE DE CLIENTES SATISFEITOS
+            const satisfactionAnalysis = analyzeSatisfaction(texto);
+            if (satisfactionAnalysis.isPositive) {
+                return {
+                    category: 'Clientes Satisfeitos',
+                    confidence: satisfactionAnalysis.confidence,
+                    reason: satisfactionAnalysis.reason
+                };
+            }
+            
+            // 2. ANÁLISE DE PROBLEMAS TÉCNICOS
+            const problemAnalysis = analyzeProblems(texto);
+            if (problemAnalysis.isProblem && !problemAnalysis.isResolved) {
+                return {
+                    category: 'Problemas Técnicos',
+                    confidence: problemAnalysis.confidence,
+                    reason: problemAnalysis.reason
+                };
+            }
+            
+            // 3. ANÁLISE DE SUGESTÕES
+            const suggestionAnalysis = analyzeSuggestions(texto);
+            if (suggestionAnalysis.isSuggestion) {
+                return {
+                    category: 'Sugestões de Funcionalidades',
+                    confidence: suggestionAnalysis.confidence,
+                    reason: suggestionAnalysis.reason
+                };
+            }
+            
+            return {
+                category: 'Não Classificado',
+                confidence: 0.3,
+                reason: 'Não se enquadra em nenhuma categoria específica'
+            };
+        }
+        
+        function analyzeSatisfaction(texto) {
+            // Palavras claramente positivas
+            const strongPositive = ['excelente', 'ótimo', 'perfeito', 'maravilhoso', 'fantástico', 'incrível', 'adorei', 'parabéns'];
+            const mediumPositive = ['muito bom', 'muito útil', 'muito prático', 'muito fácil', 'muito legal'];
+            const weakPositive = ['bom', 'legal', 'bacana', 'útil', 'prático', 'gostei', 'top', 'show'];
+            
+            // Contextos que indicam satisfação mesmo com palavras aparentemente negativas
+            const problemSolvingPatterns = [
+                'resolve problema', 'resolveu problema', 'acabou com problema', 'elimina problema',
+                'resolve questão', 'resolveu questão', 'acabou com questão', 'elimina questão',
+                'resolve dificuldade', 'resolveu dificuldade', 'acabou com dificuldade', 'elimina dificuldade',
+                'facilita', 'simplifica', 'agiliza', 'economiza tempo', 'poupa tempo'
+            ];
+            
+            // Intensificadores positivos
+            const positiveIntensifiers = ['muito', 'bem', 'super', 'extremamente', 'bastante'];
+            
+            // Verificar padrões de resolução de problemas
+            for (let pattern of problemSolvingPatterns) {
+                if (texto.includes(pattern)) {
+                    return {
+                        isPositive: true,
+                        confidence: 0.9,
+                        reason: `Padrão de resolução: "${pattern}"`
+                    };
                 }
-                return texto.includes(p);
-            })) {
-                return 'Clientes Satisfeitos';
             }
             
-            // 2. PROBLEMAS TÉCNICOS
-            if ([
-                'erro', 'bug', 'problema', 'não funciona', 'falha', 'travando', 'lento', 'trava',
-                'não carrega', 'não abre', 'demora', 'não consegue', 'não consigo', 'dificuldade',
-                'complicado', 'difícil', 'não está funcionando', 'não roda', 'não salva'
-            ].some(p => texto.includes(p))) {
-                return 'Problemas Técnicos';
+            // Verificar palavras fortemente positivas
+            for (let word of strongPositive) {
+                if (texto.includes(word)) {
+                    return {
+                        isPositive: true,
+                        confidence: 0.95,
+                        reason: `Palavra fortemente positiva: "${word}"`
+                    };
+                }
             }
             
-            // 3. SUGESTÕES DE FUNCIONALIDADES
-            if ([
-                'adicionar', 'implementar', 'incluir', 'criar', 'desenvolver', 'possibilidade',
-                'gostaria', 'seria bom', 'seria interessante', 'sugestão', 'funcionalidade',
-                'inserir', 'colocar', 'melhorar', 'aprimorar', 'otimizar', 'aumentar',
-                'dimensionamento', 'cálculo', 'calcular', 'dimensionar', 'conduto', 'cabo', 
-                'fiação', 'bitola', 'condutor', 'seção', 'quadro', 'qd', 'qgbt', 'distribuição',
-                'disjuntor', 'dr', 'dps', 'proteção', 'circuito', 'trifásico', 'monofásico',
-                'imprimir', 'impressão', 'relatório', 'lista de materiais', 'pdf', 'exportar',
-                'autocad', 'dwg', 'dxf', 'cad', 'celular', 'mobile', 'smartphone', 'tablet',
-                'aplicativo', 'app', 'norma', 'nbr', 'técnica', 'abnt', 'spda', 'aterramento',
-                'iluminação', 'lâmpada', 'luz', 'luminária', 'interruptor', 'tomada',
-                'orçamento', 'custo', 'preço', 'material', 'simbologia', 'símbolo',
-                'tutorial', 'curso', 'treinamento', 'interface', 'layout', 'design',
-                'projeto', 'planta', 'escala', 'medidas', 'automação'
-            ].some(p => texto.includes(p))) {
-                return 'Sugestões de Funcionalidades';
+            // Verificar combinações com intensificadores
+            for (let intensifier of positiveIntensifiers) {
+                for (let word of weakPositive) {
+                    if (texto.includes(intensifier + ' ' + word)) {
+                        return {
+                            isPositive: true,
+                            confidence: 0.9,
+                            reason: `Intensificador positivo: "${intensifier} ${word}"`
+                        };
+                    }
+                }
             }
             
-            return 'Não Classificado';
+            // Verificar frases positivas médias
+            for (let phrase of mediumPositive) {
+                if (texto.includes(phrase)) {
+                    return {
+                        isPositive: true,
+                        confidence: 0.85,
+                        reason: `Frase positiva: "${phrase}"`
+                    };
+                }
+            }
+            
+            // Verificar palavras fracamente positivas (mas cuidado com contexto)
+            for (let word of weakPositive) {
+                if (texto === word || texto.includes(' ' + word + ' ') || texto.startsWith(word + ' ') || texto.endsWith(' ' + word)) {
+                    // Verificar se não há negação próxima
+                    if (!hasNegationNear(texto, word)) {
+                        return {
+                            isPositive: true,
+                            confidence: 0.7,
+                            reason: `Palavra positiva simples: "${word}"`
+                        };
+                    }
+                }
+            }
+            
+            return { isPositive: false, confidence: 0, reason: '' };
+        }
+        
+        function analyzeProblems(texto) {
+            const problemWords = ['erro', 'bug', 'falha', 'problema', 'dificuldade', 'não funciona', 'não carrega', 'trava', 'travando', 'lento', 'demora'];
+            const resolutionWords = ['resolve', 'resolveu', 'soluciona', 'solucionou', 'elimina', 'eliminou', 'acabou com', 'corrige', 'corrigiu'];
+            
+            let foundProblem = false;
+            let isResolved = false;
+            let confidence = 0;
+            let reason = '';
+            
+            // Verificar se há palavras de problema
+            for (let word of problemWords) {
+                if (texto.includes(word)) {
+                    foundProblem = true;
+                    
+                    // Verificar se o problema foi resolvido
+                    for (let resWord of resolutionWords) {
+                        if (texto.includes(resWord + ' ' + word) || texto.includes(resWord + ' o ' + word) || texto.includes(resWord + ' meu ' + word)) {
+                            isResolved = true;
+                            break;
+                        }
+                    }
+                    
+                    // Verificar negação (ex: "não tenho problema")
+                    if (hasNegationNear(texto, word)) {
+                        isResolved = true;
+                        reason = `Negação detectada com "${word}"`;
+                        confidence = 0.8;
+                    } else if (isResolved) {
+                        reason = `Problema resolvido: "${word}"`;
+                        confidence = 0.6; // Baixa confiança porque pode ser positivo
+                    } else {
+                        reason = `Problema identificado: "${word}"`;
+                        confidence = 0.85;
+                    }
+                    break;
+                }
+            }
+            
+            return {
+                isProblem: foundProblem,
+                isResolved: isResolved,
+                confidence: confidence,
+                reason: reason
+            };
+        }
+        
+        function analyzeSuggestions(texto) {
+            const suggestionStarters = [
+                'adicionar', 'implementar', 'incluir', 'criar', 'desenvolver', 'inserir', 'colocar',
+                'gostaria', 'seria bom', 'seria interessante', 'seria legal', 'poderia ter',
+                'sugestão', 'sugerir', 'sugiro', 'melhorar', 'aprimorar', 'otimizar'
+            ];
+            
+            const technicalFeatures = [
+                'dimensionamento', 'cálculo', 'calcular', 'dimensionar', 'conduto', 'cabo', 'fiação',
+                'quadro', 'disjuntor', 'dr', 'dps', 'circuito', 'trifásico', 'monofásico',
+                'autocad', 'dwg', 'dxf', 'cad', 'mobile', 'celular', 'app', 'aplicativo',
+                'orçamento', 'relatório', 'pdf', 'impressão', 'norma', 'nbr'
+            ];
+            
+            let confidence = 0;
+            let reason = '';
+            
+            // Verificar iniciadores de sugestão
+            for (let starter of suggestionStarters) {
+                if (texto.includes(starter)) {
+                    confidence = 0.8;
+                    reason = `Palavra de sugestão: "${starter}"`;
+                    
+                    // Verificar se há características técnicas específicas
+                    for (let feature of technicalFeatures) {
+                        if (texto.includes(feature)) {
+                            confidence = 0.9;
+                            reason = `Sugestão técnica: "${starter}" + "${feature}"`;
+                            break;
+                        }
+                    }
+                    return {
+                        isSuggestion: true,
+                        confidence: confidence,
+                        reason: reason
+                    };
+                }
+            }
+            
+            // Verificar apenas características técnicas (pode ser sugestão implícita)
+            for (let feature of technicalFeatures) {
+                if (texto.includes(feature)) {
+                    confidence = 0.6;
+                    reason = `Possível sugestão técnica: "${feature}"`;
+                    return {
+                        isSuggestion: true,
+                        confidence: confidence,
+                        reason: reason
+                    };
+                }
+            }
+            
+            return {
+                isSuggestion: false,
+                confidence: 0,
+                reason: ''
+            };
+        }
+        
+        function hasNegationNear(texto, word) {
+            const negations = ['não', 'nunca', 'sem', 'zero'];
+            const wordIndex = texto.indexOf(word);
+            
+            if (wordIndex === -1) return false;
+            
+            // Verificar 20 caracteres antes da palavra
+            const beforeText = texto.substring(Math.max(0, wordIndex - 20), wordIndex);
+            
+            for (let neg of negations) {
+                if (beforeText.includes(neg)) {
+                    return true;
+                }
+            }
+            
+            return false;
         }
         
         function getCategoryKey(category) {
@@ -753,6 +1018,16 @@
                 case 'Problemas Técnicos': return 'problemas';
                 case 'Sugestões de Funcionalidades': return 'sugestoes';
                 default: return 'naoClassificado';
+            }
+        }
+        
+        function getConfidenceBadge(confidence) {
+            if (confidence >= 0.8) {
+                return '<span class="confidence-badge confidence-high">Alta</span>';
+            } else if (confidence >= 0.6) {
+                return '<span class="confidence-badge confidence-medium">Média</span>';
+            } else {
+                return '<span class="confidence-badge confidence-low">Baixa</span>';
             }
         }
         
@@ -767,7 +1042,7 @@
             const dist = data.distribution;
             
             document.getElementById('dashboardSubtitle').textContent = 
-                `Análise de ${total} respostas válidas processadas automaticamente`;
+                `Análise inteligente de ${total} respostas com detecção contextual`;
             
             const summaryHTML = `
                 <div class="summary-card satisfeitos">
@@ -824,9 +1099,9 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💬 Exemplos de Satisfação (com motivos):</div>
+                        <div class="examples-title">💬 Exemplos de Satisfação (detectados contextualmente):</div>
                         <ul class="examples-list">
-                            ${getSubstantialExamples(data.categories.satisfeitos).map(ex => `<li>${ex}</li>`).join('')}
+                            ${getHighConfidenceExamples(data.categories.satisfeitos).map(ex => `<li>${ex.resposta}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -851,9 +1126,9 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">⚠️ Principais Problemas:</div>
+                        <div class="examples-title">⚠️ Principais Problemas Reais:</div>
                         <ul class="examples-list">
-                            ${data.categories.problemas.slice(0, 5).map(item => `<li>${item.resposta}</li>`).join('')}
+                            ${getHighConfidenceExamples(data.categories.problemas).slice(0, 5).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -878,9 +1153,9 @@
                     </div>
                     
                     <div class="examples-section">
-                        <div class="examples-title">💡 Principais Sugestões:</div>
+                        <div class="examples-title">💡 Principais Sugestões Identificadas:</div>
                         <ul class="examples-list">
-                            ${data.categories.sugestoes.slice(0, 8).map(item => `<li>${item.resposta}</li>`).join('')}
+                            ${getHighConfidenceExamples(data.categories.sugestoes).slice(0, 8).map(item => `<li>${item.resposta}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
@@ -896,20 +1171,20 @@
                 const texto = item.resposta.toLowerCase();
                 
                 if (category === 'satisfeitos') {
-                    if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular')) {
-                        themes['Elogios ao Dimensionamento'] = (themes['Elogios ao Dimensionamento'] || 0) + 1;
+                    if (texto.includes('resolve') || texto.includes('resolveu') || texto.includes('elimina') || texto.includes('acabou')) {
+                        themes['Resolução de Problemas'] = (themes['Resolução de Problemas'] || 0) + 1;
                     }
-                    if (texto.includes('facilita') || texto.includes('fácil') || texto.includes('prático')) {
+                    if (texto.includes('facilita') || texto.includes('fácil') || texto.includes('prático') || texto.includes('simplifica')) {
                         themes['Facilidade de Uso'] = (themes['Facilidade de Uso'] || 0) + 1;
                     }
-                    if (texto.includes('tempo') || texto.includes('rápido') || texto.includes('agiliza')) {
+                    if (texto.includes('tempo') || texto.includes('rápido') || texto.includes('agiliza') || texto.includes('economiza')) {
                         themes['Economia de Tempo'] = (themes['Economia de Tempo'] || 0) + 1;
                     }
-                    if (texto.includes('projeto') || texto.includes('trabalho') || texto.includes('ajuda')) {
-                        themes['Ajuda nos Projetos'] = (themes['Ajuda nos Projetos'] || 0) + 1;
+                    if (texto.includes('muito bom') || texto.includes('excelente') || texto.includes('ótimo') || texto.includes('parabéns')) {
+                        themes['Elogios Diretos'] = (themes['Elogios Diretos'] || 0) + 1;
                     }
-                    if (texto.includes('muito bom') || texto.includes('excelente') || texto.includes('ótimo') || texto.includes('parabéns') || ['bom', 'legal', 'top', 'show'].some(p => texto === p)) {
-                        themes['Elogios Gerais'] = (themes['Elogios Gerais'] || 0) + 1;
+                    if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular')) {
+                        themes['Elogios ao Dimensionamento'] = (themes['Elogios ao Dimensionamento'] || 0) + 1;
                     }
                 } else if (category === 'problemas') {
                     if (texto.includes('lento') || texto.includes('demora') || texto.includes('trava')) {
@@ -928,10 +1203,10 @@
                         themes['Dificuldade de Uso'] = (themes['Dificuldade de Uso'] || 0) + 1;
                     }
                 } else if (category === 'sugestoes') {
-                    if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular') || texto.includes('condutor') || texto.includes('cabo')) {
+                    if (texto.includes('dimensionamento') || texto.includes('cálculo') || texto.includes('calcular') || texto.includes('condutor')) {
                         themes['Dimensionamento/Cálculos'] = (themes['Dimensionamento/Cálculos'] || 0) + 1;
                     }
-                    if (texto.includes('quadro') || texto.includes('qd') || texto.includes('distribuição') || texto.includes('disjuntor') || texto.includes('dr')) {
+                    if (texto.includes('quadro') || texto.includes('qd') || texto.includes('distribuição') || texto.includes('disjuntor')) {
                         themes['Quadros Elétricos'] = (themes['Quadros Elétricos'] || 0) + 1;
                     }
                     if (texto.includes('orçamento') || texto.includes('custo') || texto.includes('preço') || texto.includes('material')) {
@@ -940,17 +1215,8 @@
                     if (texto.includes('autocad') || texto.includes('dwg') || texto.includes('dxf') || texto.includes('cad')) {
                         themes['Integração CAD'] = (themes['Integração CAD'] || 0) + 1;
                     }
-                    if (texto.includes('relatório') || texto.includes('pdf') || texto.includes('imprimir') || texto.includes('lista')) {
-                        themes['Relatórios/Impressão'] = (themes['Relatórios/Impressão'] || 0) + 1;
-                    }
-                    if (texto.includes('símbolo') || texto.includes('simbologia') || texto.includes('interruptor') || texto.includes('tomada')) {
-                        themes['Símbolos/Componentes'] = (themes['Símbolos/Componentes'] || 0) + 1;
-                    }
                     if (texto.includes('celular') || texto.includes('mobile') || texto.includes('tablet') || texto.includes('app')) {
                         themes['Mobile/App'] = (themes['Mobile/App'] || 0) + 1;
-                    }
-                    if (texto.includes('iluminação') || texto.includes('lâmpada') || texto.includes('luz') || texto.includes('luminária')) {
-                        themes['Iluminação'] = (themes['Iluminação'] || 0) + 1;
                     }
                 }
             });
@@ -961,11 +1227,11 @@
                 .map(([name, count]) => ({ name, count }));
         }
         
-        function getSubstantialExamples(items) {
+        function getHighConfidenceExamples(items) {
             return items
-                .filter(item => item.resposta.length > 20) // Only substantial responses
-                .slice(0, 8)
-                .map(item => item.resposta);
+                .filter(item => item.confianca >= 0.7) // Only high confidence
+                .sort((a, b) => b.confianca - a.confianca) // Sort by confidence
+                .slice(0, 8);
         }
         
         function generateDetailedTables(data) {
@@ -1002,7 +1268,7 @@
                 <div id="${categoryKey}-detail" class="detail-tab-content ${isActive}" ${style}>
                     <div style="background: linear-gradient(135deg, ${headerColor}20, ${headerColor}10); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
                         <h3 style="color: ${headerColor}; margin: 0 0 10px 0;">${categoryName} - ${items.length} respostas</h3>
-                        <p style="margin: 0; color: #555;">Todas as respostas desta categoria listadas abaixo.</p>
+                        <p style="margin: 0; color: #555;">Todas as respostas desta categoria com nível de confiança da classificação.</p>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
@@ -1018,6 +1284,8 @@
                                 <tr style="background: ${headerColor}; color: ${textColor};">
                                     <th style="width: 60px;">#</th>
                                     <th>Resposta</th>
+                                    <th style="width: 100px;">Confiança</th>
+                                    <th style="width: 200px;">Motivo</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-${categoryKey}">
@@ -1025,6 +1293,8 @@
                                     <tr>
                                         <td style="font-weight: bold; color: #666;">${item.id}</td>
                                         <td>${item.resposta}</td>
+                                        <td>${getConfidenceBadge(item.confianca)}</td>
+                                        <td style="font-size: 12px; color: #666;">${item.motivo}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
